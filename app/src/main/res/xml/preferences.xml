@@ -425,6 +425,12 @@
             android:summary="@string/summary_quit_dialog"
             android:title="@string/title_quit_dialog"
             app:iconSpaceReserved="false" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="checkbox_enable_quick_controls"
+            android:summary="@string/summary_enable_quick_controls"
+            android:title="@string/title_enable_quick_controls"
+            app:iconSpaceReserved="false" />
         <com.limelight.preferences.SeekBarPreference
             android:defaultValue="90"
             android:key="seekbar_keyboard_axi_opacity"
@@ -814,7 +820,7 @@
             app:iconSpaceReserved="false" />
 
         <com.limelight.preferences.WebLauncherPreference
-            url="https://github.com/ClassicOldSong/moonlight-android/releases"
+            url="https://github.com/veedy-dev/driftlight-android/releases"
             android:key="option_software_release"
             android:summary="@string/summary_software_update"
             android:title="@string/title_software_update"

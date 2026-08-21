@@ -33,6 +33,7 @@ import com.limelight.nvstream.jni.MoonBridge;
 import com.limelight.preferences.GlPreferences;
 import com.limelight.preferences.PreferenceConfiguration;
 import com.limelight.ui.GameGestures;
+import com.limelight.ui.QuickControlsOverlay;
 import com.limelight.ui.StreamView;
 import com.limelight.utils.Dialog;
 import com.limelight.utils.PanZoomHandler;
@@ -43,7 +44,6 @@ import com.limelight.utils.UiHelper;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.PictureInPictureParams;
 import android.app.Service;
 import android.content.ClipData;
@@ -96,6 +96,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.preference.PreferenceManager;
 
 import java.io.ByteArrayInputStream;
@@ -144,6 +145,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     private KeyBoardController keyBoardController;
 
     private KeyBoardLayoutController keyBoardLayoutController;
+    private QuickControlsOverlay quickControlsOverlay;
 
     private PreferenceConfiguration prefConfig;
     private SharedPreferences tombstonePrefs;
@@ -233,7 +235,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     public static final String EXTRA_VDISPLAY = "VirtualDisplay";
     public static final String EXTRA_SERVER_COMMANDS = "ServerCommands";
 
-    public static final String CLIPBOARD_IDENTIFIER = "ArtemisStreaming";
+    public static final String CLIPBOARD_IDENTIFIER = "DriftlightStreaming";
 
     private String host;
     private int port;
@@ -254,6 +256,8 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         void showMenu(GameInputDevice devic);
         void hideMenu();
         boolean isMenuOpen();
+        void sendAltTab();
+        void sendTaskManager();
     }
 
     public GameMenuCallbacks gameMenuCallbacks;
@@ -699,6 +703,42 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         keyBoardLayoutController.show();
     }
 
+    private void initQuickControls() {
+        quickControlsOverlay = new QuickControlsOverlay(this, (FrameLayout) rootView,
+                new QuickControlsOverlay.Callbacks() {
+                    @Override
+                    public void toggleFullKeyboard() {
+                        showHidekeyBoardLayoutController();
+                    }
+
+                    @Override
+                    public void sendAltTab() {
+                        gameMenuCallbacks.sendAltTab();
+                    }
+
+                    @Override
+                    public void toggleSystemKeyboard() {
+                        toggleKeyboard();
+                    }
+
+                    @Override
+                    public void sendTaskManager() {
+                        gameMenuCallbacks.sendTaskManager();
+                    }
+
+                    @Override
+                    public void showMore() {
+                        showGameMenu(null);
+                    }
+
+                    @Override
+                    public void restoreStreamFocus() {
+                        streamView.requestFocus();
+                        hideSystemUi(100);
+                    }
+                });
+    }
+
     //显示隐藏虚拟特殊按键
     public void showHideKeyboardController(){
         if(keyBoardController==null){
@@ -807,6 +847,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                 }
 
                 hideGameMenu();
+                if (quickControlsOverlay != null) {
+                    quickControlsOverlay.hideForPip();
+                }
 
                 performanceOverlayView.setVisibility(View.GONE);
                 notificationOverlayView.setVisibility(View.GONE);
@@ -832,6 +875,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
                 if(keyBoardLayoutController!=null && keyBoardLayoutController.shown){
                     keyBoardLayoutController.show();
+                }
+                if (quickControlsOverlay != null) {
+                    quickControlsOverlay.restoreAfterPip();
                 }
 
                 if (prefConfig.enablePerfOverlay) {
@@ -3097,6 +3143,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                 handleFocusChange(true);
 
                 hideSystemUi(1000);
+                if (prefConfig.enableQuickControls && quickControlsOverlay == null) {
+                    initQuickControls();
+                }
             }
         });
 
@@ -3377,7 +3426,11 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     @Override
     public void onBackPressed() {
-        if(prefConfig.enableBackMenu){
+        if (quickControlsOverlay != null && quickControlsOverlay.isExpanded()) {
+            quickControlsOverlay.collapse();
+            return;
+        }
+        if (prefConfig.enableBackMenu) {
             showGameMenu(null);
             return;
         }
@@ -3413,7 +3466,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         String[] strings = getResources().getStringArray(R.array.mouse_mode_names);
         String[] items = Arrays.copyOf(strings,strings.length + 1);
         items[items.length - 1] = getString(R.string.toggle_local_mouse_cursor);
-        new AlertDialog.Builder(this).setItems(items, (dialog, which) -> {
+        new MaterialAlertDialogBuilder(this).setItems(items, (dialog, which) -> {
             dialog.dismiss();
             if(which == strings.length){
                 toggleMouseLocalCursor();
@@ -3505,7 +3558,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     }
 
     public void quit() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(R.string.game_dialog_title_quit_confirm);
         builder.setMessage(R.string.game_dialog_message_quit_confirm);
 
@@ -3517,12 +3570,14 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
         builder.setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss());
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.show();
     }
 
     @Override
     public void showGameMenu(GameInputDevice device) {
+        if (quickControlsOverlay != null && quickControlsOverlay.isExpanded()) {
+            quickControlsOverlay.collapse();
+        }
         if (gameMenuCallbacks != null) {
             gameMenuCallbacks.showMenu(device);
         }

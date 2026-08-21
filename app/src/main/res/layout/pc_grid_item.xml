@@ -1,42 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="20dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="210dp"
+    android:layout_height="188dp"
+    android:layout_margin="5dp"
+    android:background="@drawable/drift_card_background"
+    android:padding="18dp">
+
     <RelativeLayout
         android:id="@+id/grid_image_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_centerHorizontal="true">
+
         <ImageView
             android:id="@+id/grid_image"
-            android:layout_centerHorizontal="true"
-            android:layout_width="125dp"
-            android:layout_height="125dp">
-        </ImageView>
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            app:tint="@color/drift_text" />
+
         <ImageView
             android:id="@+id/grid_overlay"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="28dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp">
-        </ImageView>
-        <ProgressBar
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/drift_card_background"
+            android:padding="7dp"
+            app:tint="@color/drift_primary" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/grid_spinner"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="28dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:indeterminate="true">
-        </ProgressBar>
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/drift_primary" />
     </RelativeLayout>
+
     <TextView
         android:id="@+id/grid_text"
-        android:layout_width="125dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/grid_image_layout"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:ellipsize="end"
         android:gravity="center"
-        android:textSize="18sp" >
-    </TextView>
+        android:maxLines="2"
+        android:textColor="@color/drift_text"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 </RelativeLayout>

@@ -1,7 +1,6 @@
 package com.limelight;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +10,9 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import com.limelight.binding.input.GameInputDevice;
 import com.limelight.binding.input.KeyboardTranslator;
@@ -136,7 +138,7 @@ public class GameMenu implements Game.GameMenuCallbacks {
     }
 
     private void showMenuDialog(String title, MenuOption[] options) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(game);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(game);
         builder.setTitle(title);
 
         final ArrayAdapter<String> actions =
@@ -356,7 +358,7 @@ public class GameMenu implements Game.GameMenuCallbacks {
                     ArrayList<String> serverCmds = game.getServerCmds();
 
                     if (serverCmds.isEmpty()) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(game);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(game);
                         builder.setTitle(R.string.game_dialog_title_server_cmd_empty);
                         builder.setMessage(R.string.game_dialog_message_server_cmd_empty);
 
@@ -382,6 +384,23 @@ public class GameMenu implements Game.GameMenuCallbacks {
         options.add(new MenuOption(getString(R.string.game_menu_cancel), null));
 
         showMenuDialog(getString(R.string.quick_menu_title), options.toArray(new MenuOption[options.size()]));
+    }
+
+    @Override
+    public void sendAltTab() {
+        runWithGameFocus(() -> sendKeys(new short[]{
+                KeyboardTranslator.VK_LMENU,
+                KeyboardTranslator.VK_TAB
+        }));
+    }
+
+    @Override
+    public void sendTaskManager() {
+        runWithGameFocus(() -> sendKeys(new short[]{
+                KeyboardTranslator.VK_LCONTROL,
+                KeyboardTranslator.VK_LSHIFT,
+                KeyboardTranslator.VK_ESCAPE
+        }));
     }
 
     public void hideMenu() {

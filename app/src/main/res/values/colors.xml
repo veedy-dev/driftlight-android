@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="drift_bg">#0D1111</color>
+    <color name="drift_surface">#171D1C</color>
+    <color name="drift_surface_high">#202826</color>
+    <color name="drift_primary">#9FE7D0</color>
+    <color name="drift_on_primary">#06261F</color>
+    <color name="drift_text">#F2F4EF</color>
+    <color name="drift_text_muted">#AAB4AF</color>
+    <color name="drift_outline">#3B4743</color>
+    <color name="drift_error">#FFB4AB</color>
+    <color name="drift_scrim">#990D1111</color>
+    <color name="drift_transparent">#00000000</color>
+</resources>

@@ -27,10 +27,12 @@ import com.limelight.utils.HelpLauncher;
 import com.limelight.utils.ServerHelper;
 import com.limelight.utils.ShortcutHelper;
 import com.limelight.utils.UiHelper;
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -67,7 +69,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class PcView extends Activity implements AdapterFragmentCallbacks {
-    private RelativeLayout noPcFoundLayout;
+    private View noPcFoundLayout;
     private PcGridAdapter pcGridAdapter;
     private ShortcutHelper shortcutHelper;
     private ComputerManagerService.ComputerManagerBinder managerBinder;
@@ -569,7 +571,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         layout.addView(otpInput);
         layout.addView(passphraseInput);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(context);
         dialogBuilder.setTitle(R.string.pcview_menu_pair_pc_otp);
         dialogBuilder.setView(layout);
 

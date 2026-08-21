@@ -24,9 +24,9 @@ import com.limelight.utils.Dialog;
 import com.limelight.utils.ServerHelper;
 import com.limelight.utils.SpinnerDialog;
 import com.limelight.utils.UiHelper;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -341,7 +341,7 @@ public class AddComputerManually extends Activity {
                 hostName = server;
             }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(R.string.pair_pc_confirm_title);
             builder.setMessage(getString(R.string.pair_pc_confirm_message, hostName));
 
@@ -353,8 +353,7 @@ public class AddComputerManually extends Activity {
 
             builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            builder.show();
         }
     }
 

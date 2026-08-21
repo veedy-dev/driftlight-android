@@ -34,12 +34,12 @@
 
     <!-- Network test strings -->
     <string name="nettest_title_waiting">Testing Network Connection</string>
-    <string name="nettest_text_waiting">Artemis is testing your network connection to determine if any required ports are blocked.\n\nThis may take a few seconds…</string>
+    <string name="nettest_text_waiting">Driftlight is checking whether this network blocks required streaming ports.\n\nThis may take a few seconds…</string>
     <string name="nettest_title_done">Network Test Complete</string>
-    <string name="nettest_text_success">Your network does not appear to be blocking Artemis. If you still have trouble connecting, check your PC\'s firewall settings.\n\nIf you are trying to stream over the Internet, install the Artemis Internet Hosting Tool on your PC and run the included Internet Streaming Tester to check your PC\'s Internet connection.</string>
-    <string name="nettest_text_inconclusive">The network test could not be performed because none of Artemis\'s connection testing servers were reachable. Check your Internet connection or try again later.</string>
-    <string name="nettest_text_failure">Your device\'s current network connection seems to be blocking Artemis. Streaming over the Internet may not work while connected to this network.\n\nThe following network ports were blocked:\n</string>
-    <string name="nettest_text_blocked">Your device\'s current network connection is blocking Artemis. Streaming over the Internet may not work while connected to this network.</string>
+    <string name="nettest_text_success">This network does not appear to block Driftlight. If connection problems continue, check the host firewall and router settings.</string>
+    <string name="nettest_text_inconclusive">The network test could not reach its test servers. Check your Internet connection or try again later.</string>
+    <string name="nettest_text_failure">This network appears to block Driftlight. Internet streaming may not work here.\n\nThe following network ports were blocked:\n</string>
+    <string name="nettest_text_blocked">This network is blocking required streaming traffic.</string>
 
     <!-- Pair messages -->
     <string name="pairing">Pairing…</string>
@@ -82,7 +82,7 @@
 	    Using remote desktop software can also cause this error. Try rebooting your machine or reinstalling GFE.
     </string>
     <string name="title_decoding_error">Video Decoder Crashed</string>
-    <string name="message_decoding_error">Artemis has crashed due to an incompatibility with this device\'s video decoder. Try adjusting the streaming settings if the crashes continue.</string>
+    <string name="message_decoding_error">Driftlight stopped because this device’s video decoder crashed. Try lowering the resolution, frame rate, or codec setting if it continues.</string>
     <string name="title_decoding_reset">Video Settings Reset</string>
     <string name="message_decoding_reset">Your device\'s video decoder continues to crash at your selected streaming settings. Your streaming settings have been reset to default.</string>
     <string name="error_usb_prohibited">USB access is prohibited by your device administrator. Check your Knox or MDM settings.</string>
@@ -210,7 +210,7 @@
     <string name="title_checkbox_xb1_driver">Xbox 360/One/NintendoPro USB gamepad driver</string>
     <string name="summary_checkbox_xb1_driver">Enables a built-in USB driver for devices without native Xbox/Nintendo Pro controller support</string>
     <string name="title_checkbox_usb_bind_all">Override native Xbox gamepad support</string>
-    <string name="summary_checkbox_usb_bind_all">Use Artemis\'s USB driver for all supported gamepads, even if native Xbox/Nintendo Pro controller support is present</string>
+    <string name="summary_checkbox_usb_bind_all">Use Driftlight’s USB driver for supported gamepads even when native Xbox or Nintendo Pro controller support is available</string>
     <string name="title_checkbox_mouse_emulation">Mouse emulation via gamepad</string>
     <string name="summary_checkbox_mouse_emulation">Long pressing the Start button will switch the gamepad into mouse mode</string>
     <string name="title_checkbox_flip_face_buttons">Flip face buttons</string>
@@ -255,7 +255,7 @@
     <string name="title_checkbox_enable_pip">Enable Picture-in-Picture observer mode</string>
     <string name="summary_checkbox_enable_pip">Allows the stream to be viewed (but not controlled) while multitasking</string>
     <string name="title_language_list">Language</string>
-    <string name="summary_language_list">Language to use for Artemis</string>
+    <string name="summary_language_list">Language used by Driftlight</string>
     <string name="title_checkbox_small_icon_mode">Use small box art</string>
     <string name="summary_checkbox_small_icon_mode">Smaller box art in the app grid allows more apps to be visible on screen</string>
 
@@ -291,7 +291,7 @@
     <string name="title_troubleshooting">Troubleshooting guide</string>
     <string name="summary_troubleshooting">View tips for diagnosing and fixing common streaming issues</string>
     <string name="title_privacy_policy">Privacy policy</string>
-    <string name="summary_privacy_policy">View Artemis\'s privacy policy</string>
+    <string name="summary_privacy_policy">View the project privacy policy</string>
     <string name="title_special_key_help">Custom Keys help</string>
     <string name="summary_special_key_help">Instructions about how to setup custom special keys</string>
 
@@ -330,18 +330,18 @@
     <string name="pacing_smoothness">Prefer smoothest video (may significantly increase latency)</string>
 
 
-    <string name="keyboard_service_label">Artemis Physical keyboard</string>
-    <string name="accessibility_description_text">Only used when physical keyboard shortcut were intercepted by system. In some systems, several keyboard shortcut are defind and used by the Android system, causing them not being able to be passed through to the host PC. Artemis will not look through your input, nor collecting your password, credit card number or any other private information.</string>
+    <string name="keyboard_service_label">Driftlight physical keyboard</string>
+    <string name="accessibility_description_text">Lets physical keyboard shortcuts reach the host when Android intercepts them. Driftlight does not inspect or collect typed passwords, payment details, or other private text.</string>
 
 
     <!-- In Game menu -->
     <string name="game_menu_toggle_keyboard">Show soft keyboard</string>
-    <string name="game_menu_hud">Toggle Preformance Overlay</string>
+    <string name="game_menu_hud">Toggle performance overlay</string>
     <string name="game_menu_select_mouse_mode">Select Mouse mode</string>
     <string name="game_menu_enable_zoom_mode">Enable Pan/Zoom</string>
     <string name="game_menu_disable_zoom_mode">Disable Pan/Zoom</string>
     <string name="game_menu_rotate_screen">Rotate Screen</string>
-    <string name="game_menu_toggle_keyboard_model">Toggle Special keys</string>s
+    <string name="game_menu_toggle_keyboard_model">Toggle special keys</string>
     <string name="game_menu_toggle_virtual_model">Toggle On-screen controller</string>
     <string name="game_menu_toggle_virtual_keyboard_model">Toggle On-screen full keyboard</string>
     <string name="game_menu_switch_touch_sensitivity_model">Switch touch sensitivity</string>
@@ -415,9 +415,9 @@
     <string name="title_import_special_button">Import Custom Keys</string>
     <string name="summary_import_special_button">Available in Back Menu and special keys.\nNote: Importing will overwrite current configuration, please backup accordingly.</string>
     <string name="title_software_update">Software Update</string>
-    <string name="summary_software_update">Artemis Nior Version by ClassicOldSong - Visit GitHub Release to get latest version</string>
-    <string name="title_follow_update">Follow Update</string>
-    <string name="summary_follow_update">Follow updates of Artemis with Obtainium</string>
+    <string name="summary_software_update">Visit the Driftlight GitHub repository for builds and updates</string>
+    <string name="title_follow_update">Follow updates</string>
+    <string name="summary_follow_update">Follow Driftlight releases with Obtainium</string>
     <string name="title_special_key_layout">Special Key Layout</string>
     <string name="title_show_virtual_key">Display virtual keys on screen</string>
     <string name="summary_show_virtual_key">Display a layer of virtual special keys on the touchscreen.\nKey opacity is shared with the virtual gamepad above.</string>
@@ -462,7 +462,7 @@
     <string name="title_touchpad_sensitivity_y">Touchpad Sensitivity Y Axis</string>
     <string name="summary_touchpad_sensitivity_y">For mouse touchpad mode and virtual special button touchpad control;\nBoth share a sensitivity value, but the sensitivity performance may be different.\nDoes anyone use both together?</string>
     <string name="title_device_rumble">Force vibration on device</string>
-    <string name="summary_device_rumble">If you are not satisfied with the vibration of the connected gamepad, you can enable this option.\nInvalid for forced use of Artemis\'s built-in USB driver</string>
+    <string name="summary_device_rumble">Use the Android device vibration motor when the connected gamepad’s rumble is insufficient.\nNot available while forcing Driftlight’s USB driver.</string>
     <string name="title_clear_default_special_button">Disable default Special Keys</string>
     <string name="summary_clear_default_special_button">If you feel the built-in commands in the Back Menu are useless, you can disable them and use your imported ones.</string>
     <string name="title_trackpad_sensitivity_x">Trackpad Sensitivity X</string>
@@ -586,6 +586,18 @@
     <string name="searchpreference_more">More</string>
     <string name="searchpreference_clear_history">Clear history</string>
     <string name="searchpreference_no_results">No results</string>
+
+    <string name="drift_app_library">App library</string>
+    <string name="drift_settings_title">Settings</string>
+    <string name="title_enable_quick_controls">Show in-stream quick controls</string>
+    <string name="summary_enable_quick_controls">Adds a small edge handle for desktop keys and shortcuts while streaming</string>
+    <string name="quick_controls_title">Quick controls</string>
+    <string name="quick_controls_open">Open quick controls</string>
+    <string name="quick_full_keys">Full keys</string>
+    <string name="quick_alt_tab">Alt + Tab</string>
+    <string name="quick_android_keyboard">Android keyboard</string>
+    <string name="quick_task_manager">Task manager</string>
+    <string name="quick_more">More</string>
 
     <!-- Compliance -->
     <string name="category_basic_settings" />

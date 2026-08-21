@@ -2,45 +2,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="170dp"
-    android:layout_height="220dp">
+    android:layout_height="224dp"
+    android:padding="5dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
-        app:cardMaxElevation="8dp">
+        app:cardBackgroundColor="@color/drift_surface"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="2dp"
+        app:strokeColor="@color/drift_outline"
+        app:strokeWidth="1dp">
 
         <ImageView
             android:id="@+id/grid_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cropToPadding="false"
+            android:contentDescription="@null"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:id="@+id/grid_mask"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <ImageView
                 android:id="@+id/grid_overlay"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp" />
+                android:layout_marginTop="48dp"
+                app:tint="@color/drift_primary" />
 
             <TextView
                 android:id="@+id/grid_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/grid_overlay"
-                android:layout_margin="5dp"
-                android:gravity="center|center_vertical"
-                android:textAlignment="center"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="3"
+                android:textColor="@color/drift_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>

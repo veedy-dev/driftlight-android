@@ -3,11 +3,13 @@ package com.limelight.utils;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Button;
 
 import com.limelight.R;
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class Dialog implements Runnable {
     private final String title;
@@ -63,35 +65,25 @@ public class Dialog implements Runnable {
         if (activity.isFinishing())
             return;
 
-        alert = new AlertDialog.Builder(activity).create();
-
-        alert.setTitle(title);
-        alert.setMessage(message);
-        alert.setCancelable(false);
+        alert = new MaterialAlertDialogBuilder(activity)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    synchronized (rundownDialogs) {
+                        rundownDialogs.remove(Dialog.this);
+                    }
+                    runOnDismiss.run();
+                })
+                .setNeutralButton(R.string.help, (dialog, which) -> {
+                    synchronized (rundownDialogs) {
+                        rundownDialogs.remove(Dialog.this);
+                    }
+                    runOnDismiss.run();
+                    HelpLauncher.launchTroubleshooting(activity);
+                })
+                .create();
         alert.setCanceledOnTouchOutside(false);
- 
-        alert.setButton(AlertDialog.BUTTON_POSITIVE, activity.getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                  synchronized (rundownDialogs) {
-                      rundownDialogs.remove(Dialog.this);
-                      alert.dismiss();
-                  }
-
-                  runOnDismiss.run();
-              }
-        });
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, activity.getResources().getText(R.string.help), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                synchronized (rundownDialogs) {
-                    rundownDialogs.remove(Dialog.this);
-                    alert.dismiss();
-                }
-
-                runOnDismiss.run();
-
-                HelpLauncher.launchTroubleshooting(activity);
-            }
-        });
         alert.setOnShowListener(new DialogInterface.OnShowListener(){
 
             @Override

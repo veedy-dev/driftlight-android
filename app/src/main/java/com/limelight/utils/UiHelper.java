@@ -1,7 +1,6 @@
 package com.limelight.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.GameManager;
 import android.app.GameState;
 import android.app.LocaleManager;
@@ -27,6 +26,9 @@ import com.limelight.Game;
 import com.limelight.R;
 import com.limelight.nvstream.http.ComputerDetails;
 import com.limelight.preferences.PreferenceConfiguration;
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
 
@@ -228,7 +230,7 @@ public class UiHelper {
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(parent);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(parent);
         builder.setMessage(Html.fromHtml(message));
         if (title != null) {
             builder.setTitle(title);

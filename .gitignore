@@ -43,3 +43,6 @@ app/.externalNativeBuild/
 
 # NDK stuff
 .cxx/
+
+# Local design comps and review captures
+.impeccable/

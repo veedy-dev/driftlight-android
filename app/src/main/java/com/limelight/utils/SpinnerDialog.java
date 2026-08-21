@@ -4,15 +4,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.limelight.R;
 
 public class SpinnerDialog implements Runnable,OnCancelListener {
     private final String title;
     private final String message;
     private final Activity activity;
-    private ProgressDialog progress;
+    private AlertDialog progress;
+    private TextView messageView;
     private final boolean finish;
 
     private static final ArrayList<SpinnerDialog> rundownDialogs = new ArrayList<>();
@@ -60,7 +67,9 @@ public class SpinnerDialog implements Runnable,OnCancelListener {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progress.setMessage(message);
+                if (messageView != null) {
+                    messageView.setText(message);
+                }
             }
         });
     }
@@ -75,23 +84,18 @@ public class SpinnerDialog implements Runnable,OnCancelListener {
 
         if (progress == null)
         {
-            progress = new ProgressDialog(activity);
+            View content = activity.getLayoutInflater().inflate(R.layout.dialog_loading, null);
+            TextView titleView = content.findViewById(R.id.loading_title);
+            messageView = content.findViewById(R.id.loading_message);
+            titleView.setText(title);
+            messageView.setText(message);
 
-            progress.setTitle(title);
-            progress.setMessage(message);
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress = new MaterialAlertDialogBuilder(activity)
+                    .setView(content)
+                    .setCancelable(finish)
+                    .create();
             progress.setOnCancelListener(this);
-
-            // If we want to finish the activity when this is killed, make it cancellable
-            if (finish)
-            {
-                progress.setCancelable(true);
-                progress.setCanceledOnTouchOutside(false);
-            }
-            else
-            {
-                progress.setCancelable(false);
-            }
+            progress.setCanceledOnTouchOutside(false);
 
             synchronized (rundownDialogs) {
                 rundownDialogs.add(this);
