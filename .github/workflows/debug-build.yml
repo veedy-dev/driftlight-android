@@ -48,20 +48,17 @@ jobs:
         with:
           api-level: 35
           arch: x86_64
-          profile: pixel_6
+          profile: pixel_c
           disable-animations: true
           script: |
             adb install -r app/build/outputs/apk/nonRoot_game/debug/app-nonRoot_game-debug.apk
             adb shell wm size 1920x1080
             adb shell wm density 320
-            adb shell settings put system accelerometer_rotation 0
-            adb shell settings put system user_rotation 1
-            adb shell wm user-rotation lock 1
             adb shell am start -W -n com.veedy.driftlight.debug/com.limelight.PcView
             sleep 5
             mkdir -p ui-smoke
             adb exec-out screencap -p > ui-smoke/host-library.png
-            adb shell run-as com.veedy.driftlight.debug am start -W -n com.veedy.driftlight.debug/com.limelight.preferences.StreamSettings
+            adb shell input tap 1552 140
             sleep 3
             adb exec-out screencap -p > ui-smoke/settings.png
 
