@@ -40,6 +40,9 @@ jobs:
           path: app/build/outputs/apk/nonRoot_game/debug/app-nonRoot_game-debug.apk
           if-no-files-found: error
 
+      - name: Enable KVM acceleration
+        run: sudo chmod 666 /dev/kvm
+
       - name: Smoke-test landscape host and settings surfaces
         uses: reactivecircus/android-emulator-runner@v2
         with:
