@@ -56,12 +56,12 @@ jobs:
             adb shell wm density 320
             adb shell settings put system accelerometer_rotation 0
             adb shell settings put system user_rotation 1
-            adb shell cmd window user-rotation lock 1
+            adb shell wm user-rotation lock 1
             adb shell am start -W -n com.veedy.driftlight.debug/com.limelight.PcView
             sleep 5
             mkdir -p ui-smoke
             adb exec-out screencap -p > ui-smoke/host-library.png
-            adb shell input tap 1552 140
+            adb shell run-as com.veedy.driftlight.debug am start -W -n com.veedy.driftlight.debug/com.limelight.preferences.StreamSettings
             sleep 3
             adb exec-out screencap -p > ui-smoke/settings.png
 
