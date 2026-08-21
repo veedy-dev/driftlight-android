@@ -47,8 +47,8 @@ Requirements:
 - Android NDK `27.0.12077973`
 
 ```bash
-rtk git submodule update --init --recursive
-rtk ./gradlew assembleNonRoot_gameDebug
+git submodule update --init --recursive
+./gradlew assembleNonRoot_gameDebug
 ```
 
 The APK is written to:

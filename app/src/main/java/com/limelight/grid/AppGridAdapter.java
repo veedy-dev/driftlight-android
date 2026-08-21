@@ -165,6 +165,13 @@ public class AppGridAdapter extends GenericGridAdapter<AppView.AppObject> {
     public void populateView(View parentView, ImageView imgView, RelativeLayout gridMask, ProgressBar prgView, TextView txtView, ImageView overlayView, AppView.AppObject obj) {
         // Let the cached asset loader handle it
         loader.populateImageView(obj.app, imgView, txtView);
+        CharSequence description = obj.isRunning
+                ? context.getString(R.string.accessibility_app_running, obj.app.getAppName())
+                : obj.app.getAppName();
+        if (obj.isHidden) {
+            description = context.getString(R.string.accessibility_app_hidden, description);
+        }
+        parentView.setContentDescription(description);
 
         if (obj.isRunning) {
             // Show the play button overlay

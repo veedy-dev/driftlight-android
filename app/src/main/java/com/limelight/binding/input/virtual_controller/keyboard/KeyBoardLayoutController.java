@@ -36,6 +36,7 @@ public class KeyBoardLayoutController {
     private static final Set<Integer> MODIFIER_KEY_CODES = new HashSet<>();
     private static final Set<Integer> SPECIAL_KEY_CODES = new HashSet<>();
     private static final long POPUP_DURATION_MS = 75;
+    private static final int MIN_KEYBOARD_HEIGHT_DP = 300;
 
     private final long timerLongClickTimeout = 300;
     private final Context context;
@@ -300,7 +301,7 @@ public class KeyBoardLayoutController {
         frame_layout.removeView(keyboardView);
         // DisplayMetrics screen = context.getResources().getDisplayMetrics();
         // (int)(screen.heightPixels/0.4)/
-        int height = prefConfig.onscreenKeyboardHeight;
+        int height = Math.max(prefConfig.onscreenKeyboardHeight, MIN_KEYBOARD_HEIGHT_DP);
         int widthPreference = prefConfig.onscreenKeyboardWidth;
         int width = widthPreference == 1000 ? ViewGroup.LayoutParams.MATCH_PARENT : dip2px(context, widthPreference);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, dip2px(context, height));

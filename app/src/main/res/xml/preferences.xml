@@ -442,14 +442,14 @@
             seekbar:min="0"
             seekbar:step="1" />
         <com.limelight.preferences.SeekBarPreference
-            android:defaultValue="200"
+            android:defaultValue="320"
             android:key="seekbar_onscreen_keyboard_height"
-            android:max="400"
+            android:max="480"
             android:summary="@string/summary_onscreen_keyboard_height"
             android:text="dp"
             android:title="@string/title_onscreen_keyboard_height"
             app:iconSpaceReserved="false"
-            seekbar:min="150"
+            seekbar:min="300"
             seekbar:step="10" />
         <com.limelight.preferences.SeekBarPreference
             android:defaultValue="1000"

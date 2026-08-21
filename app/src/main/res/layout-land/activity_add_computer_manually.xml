@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/drift_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp"
+    tools:context=".preferences.AddComputerManually">
+
+    <TextView
+        android:id="@+id/manuallyAddPcText"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:text="@string/title_add_pc"
+        android:textAppearance="@style/TextAppearance.Driftlight.ScreenTitle"
+        android:textSize="30sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:hint="@string/ip_hint"
+        app:boxBackgroundColor="@color/drift_surface"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="@color/drift_primary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/hostTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:singleLine="true"
+            android:textColor="@color/drift_text"
+            android:textSize="18sp">
+
+            <requestFocus />
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addPcButton"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:text="@android:string/ok"
+        android:textSize="16sp"
+        app:backgroundTint="@color/drift_primary"
+        app:cornerRadius="12dp"
+        app:iconGravity="textStart" />
+</LinearLayout>

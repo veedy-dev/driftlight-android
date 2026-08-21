@@ -12,14 +12,14 @@
 
     <TextView
         android:id="@+id/manuallyAddPcText"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_add_pc"
         android:textAppearance="@style/TextAppearance.Driftlight.ScreenTitle"
         android:textSize="30sp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="@string/ip_hint"
@@ -46,7 +46,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addPcButton"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
         android:text="@android:string/ok"

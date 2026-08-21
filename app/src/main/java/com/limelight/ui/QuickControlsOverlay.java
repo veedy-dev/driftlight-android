@@ -152,6 +152,7 @@ public final class QuickControlsOverlay {
         if (layer.getVisibility() != View.VISIBLE) {
             return;
         }
+        layer.bringToFront();
         expanded = true;
         scrim.setVisibility(View.VISIBLE);
         panel.setVisibility(View.VISIBLE);
