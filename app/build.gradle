@@ -90,9 +90,9 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            resValue "string", "app_label", "Driftlight Debug"
-            resValue "string", "app_label_root", "Driftlight Debug (Root)"
-            resValue "string", "app_label_game", "Driftlight Debug"
+            resValue "string", "app_label", "Driftlight"
+            resValue "string", "app_label_root", "Driftlight Root Debug"
+            resValue "string", "app_label_game", "Driftlight"
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

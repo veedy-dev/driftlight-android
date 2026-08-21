@@ -3,7 +3,7 @@
     android:id="@+id/fragmentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/drift_bg"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:drawSelectorOnTop="true"
     android:columnWidth="220dp"
