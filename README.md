@@ -47,7 +47,7 @@ The interface uses one mineral-dark palette, one mint focus signal, and two auth
 Download `Driftlight-android-debug` from the latest successful [GitHub Actions run](https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml?query=branch%3Adriftlight), or use the APK attached to the latest release.
 
 ```bash
-adb install -r Driftlight-1.0.1-debug.apk
+adb install -r app-nonRoot_game-debug.apk
 ```
 
 Driftlight uses the application ID `com.veedy.driftlight.debug`, so it can live beside Moonlight and Artemis.
