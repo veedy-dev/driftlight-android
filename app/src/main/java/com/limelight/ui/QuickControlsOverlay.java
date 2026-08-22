@@ -111,6 +111,9 @@ public final class QuickControlsOverlay {
         sessionButton.setFocusable(true);
         sessionButton.setClickable(true);
         sessionButton.setOnClickListener(v -> {
+            if (!expanded) {
+                return;
+            }
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             collapse();
             layer.postDelayed(callbacks::showSessionActions, PANEL_EXIT_DURATION_MS + 20);
@@ -221,6 +224,9 @@ public final class QuickControlsOverlay {
             view.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, null, null, null);
         }
         view.setOnClickListener(v -> {
+            if (!expanded) {
+                return;
+            }
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             collapse();
             layer.postDelayed(action, PANEL_EXIT_DURATION_MS + 20);
@@ -301,6 +307,9 @@ public final class QuickControlsOverlay {
                             panel.setTranslationX(0f);
                             showFullHandle();
                             scheduleHandleMinimize();
+                            if (restoreFocus) {
+                                callbacks.restoreStreamFocus();
+                            }
                         }
                     })
                     .start();
@@ -312,9 +321,9 @@ public final class QuickControlsOverlay {
             panel.setTranslationX(0f);
             showFullHandle();
             scheduleHandleMinimize();
-        }
-        if (restoreFocus) {
-            callbacks.restoreStreamFocus();
+            if (restoreFocus) {
+                callbacks.restoreStreamFocus();
+            }
         }
     }
 
