@@ -368,12 +368,10 @@ public final class QuickControlsOverlay {
                 dp(48), dp(72), Gravity.END | Gravity.CENTER_VERTICAL);
         handle.setLayoutParams(params);
         handle.setAlpha(0f);
-        handle.setPivotX(dp(48));
         handle.setTranslationX(0f);
-        handle.setScaleX(0.72f);
+        handle.setScaleX(1f);
         handle.animate()
                 .alpha(0.62f)
-                .scaleX(1f)
                 .setDuration(HANDLE_MOTION_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
                 .start();
@@ -398,12 +396,10 @@ public final class QuickControlsOverlay {
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
         handle.setLayoutParams(params);
         handle.setAlpha(0f);
-        handle.setPivotX(dp(56));
         handle.setTranslationX(0f);
-        handle.setScaleX(0.78f);
+        handle.setScaleX(1f);
         handle.animate()
                 .alpha(1f)
-                .scaleX(1f)
                 .setDuration(HANDLE_MOTION_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
                 .start();
