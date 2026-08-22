@@ -34,6 +34,7 @@ public final class QuickControlsOverlay {
         void sendTaskManager();
         void showMore();
         void showSessionActions();
+        void setOverlayInputActive(boolean active);
         void restoreStreamFocus();
     }
 
@@ -150,7 +151,7 @@ public final class QuickControlsOverlay {
         handle.setImageResource(R.drawable.ic_quick_controls);
         handle.setColorFilter(color(R.color.drift_text));
         handle.setContentDescription(activity.getString(R.string.quick_controls_open));
-        handle.setPadding(dp(14), dp(18), dp(10), dp(18));
+        handle.setPadding(dp(14), dp(18), dp(14), dp(18));
         handle.setScaleType(ImageButton.ScaleType.FIT_CENTER);
         handle.setFocusable(true);
         handle.setClickable(true);
@@ -199,7 +200,6 @@ public final class QuickControlsOverlay {
         });
         FrameLayout.LayoutParams handleParams = new FrameLayout.LayoutParams(
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
-        handleParams.rightMargin = dp(10);
         layer.addView(handle, handleParams);
 
         collapse(false);
@@ -249,6 +249,7 @@ public final class QuickControlsOverlay {
         if (layer.getVisibility() != View.VISIBLE) {
             return;
         }
+        callbacks.setOverlayInputActive(true);
         handle.removeCallbacks(minimizeHandleRunnable);
         panel.animate().cancel();
         scrim.animate().cancel();
@@ -358,13 +359,13 @@ public final class QuickControlsOverlay {
         }
         handle.animate().cancel();
         handleMinimized = true;
+        callbacks.setOverlayInputActive(false);
         handle.setContentDescription(activity.getString(R.string.quick_controls_reveal));
         handle.setImageDrawable(null);
         handle.setBackgroundResource(R.drawable.drift_quick_handle_minimized);
         handle.setPadding(0, 0, 0, 0);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 dp(48), dp(72), Gravity.END | Gravity.CENTER_VERTICAL);
-        params.rightMargin = dp(10);
         handle.setLayoutParams(params);
         handle.setAlpha(0f);
         handle.setTranslationX(dp(12));
@@ -377,6 +378,7 @@ public final class QuickControlsOverlay {
     }
 
     private void revealHandle() {
+        callbacks.setOverlayInputActive(true);
         showFullHandle();
         scheduleHandleMinimize();
     }
@@ -389,10 +391,9 @@ public final class QuickControlsOverlay {
         handle.setImageResource(R.drawable.ic_quick_controls);
         handle.setColorFilter(color(R.color.drift_text));
         handle.setBackgroundResource(R.drawable.drift_quick_handle);
-        handle.setPadding(dp(14), dp(18), dp(10), dp(18));
+        handle.setPadding(dp(14), dp(18), dp(14), dp(18));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
-        params.rightMargin = dp(10);
         handle.setLayoutParams(params);
         handle.setAlpha(0f);
         handle.setTranslationX(dp(16));

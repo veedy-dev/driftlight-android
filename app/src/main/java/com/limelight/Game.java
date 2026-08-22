@@ -769,6 +769,11 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                     }
 
                     @Override
+                    public void setOverlayInputActive(boolean active) {
+                        setInputGrabState(!active);
+                    }
+
+                    @Override
                     public void restoreStreamFocus() {
                         streamView.requestFocus();
                         hideSystemUi(100);
