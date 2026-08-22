@@ -1,50 +1,67 @@
-# Driftlight Android
+<p align="center">
+  <img src="docs/assets/readme-hero.png" width="100%" alt="Driftlight — stream with control">
+</p>
 
-Driftlight is a controller-first, Moonlight-compatible Android streaming client designed for landscape handhelds such as the AYN Odin 3.
+<p align="center">
+  <a href="https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml"><img alt="Build" src="https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml/badge.svg?branch=driftlight"></a>
+  <img alt="Android 5.0+" src="https://img.shields.io/badge/Android-5.0%2B-9FE7D0?logo=android&logoColor=06261F">
+  <img alt="Version 1.0.1" src="https://img.shields.io/badge/release-1.0.1-202826">
+  <a href="LICENSE.txt"><img alt="GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-AAB4AF"></a>
+</p>
 
-It keeps the mature Moonlight/Artemis streaming stack while replacing the legacy client shell with a dark Material 3 interface and fast desktop controls.
+<p align="center">
+  <strong>A controller-first, Moonlight-compatible client for Android handhelds.</strong><br>
+  Desktop controls when you need them. Nothing over the game when you do not.
+</p>
 
-## Highlights
+---
 
-- Minimal in-stream quick-control rail
-- Full desktop keyboard with Esc, F1–F12, navigation, arrow, Win, Ctrl, Alt, and sticky modifiers
-- One-tap Alt+Tab, Android keyboard, and Task Manager shortcuts
-- Toggleable quick controls under **Settings → UI Settings**
-- Controller-readable host and app libraries
-- Modern pairing, loading, error, and settings surfaces
-- Custom virtual buttons, gamepad layouts, trackpad modes, clipboard sync, external display, and Apollo integration inherited from Artemis
-- Moonlight-compatible host support, including Moonshine, Sunshine, and Apollo
+## Why Driftlight
 
-## In-stream controls
+Moonlight is excellent at streaming games. Handhelds also need the awkward desktop moments around those games: launchers, login fields, Alt+Tab, Task Manager, and full keyboard input.
 
-When **Show in-stream quick controls** is enabled, tap the small handle on the right edge of a stream. The rail exposes:
+Driftlight keeps the proven streaming core and builds those controls into the client without turning the stream into a dashboard.
 
-1. Full keys
-2. Alt + Tab
-3. Android keyboard
-4. Task manager
-5. More
+<p align="center">
+  <img src="docs/assets/readme-controls.png" width="100%" alt="Driftlight idle stripe and quick controls">
+</p>
 
-The rail collapses on Back or an outside tap, does not capture gameplay touches while closed, and hides during Picture-in-Picture.
+## What is different
 
-Existing gestures remain available in trackpad mode:
+| Streaming stays primary | Desktop control is one touch away |
+| --- | --- |
+| The floating handle fades into a transparent side stripe after three seconds. | Full keys, Alt+Tab, Android keyboard, Task Manager, and the extended menu. |
+| Android system bars stay outside client content; streams enter real immersive fullscreen. | The complete desktop layout includes Esc, F1–F12, navigation, arrows, Win, Ctrl, Alt, and sticky modifiers. |
+| An explicit control-channel keepalive protects Moonshine sessions from aggressive Android Wi-Fi power management. | Controller focus, 48dp targets, PiP restoration, clipboard sync, custom keys, and trackpad modes remain intact. |
 
-- Three-finger tap: Android software keyboard
-- Four-finger tap: full desktop keyboard
+## The client
+
+<p align="center">
+  <img src="docs/assets/readme-screens.png" width="100%" alt="Driftlight host library and settings screens">
+</p>
+
+The interface uses one mineral-dark palette, one mint focus signal, and two authored typefaces: **Unbounded** for identity and **Outfit** for operational UI. The Drift Gate icon is hand-built SVG — no generated mascot art.
 
 ## Install
 
-The installable debug-signed APK is produced by the **Debug APK** GitHub Actions workflow. Download the `Driftlight-android-debug` artifact from the latest successful run and install it on Android.
+Download `Driftlight-android-debug` from the latest successful [GitHub Actions run](https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml?query=branch%3Adriftlight), or use the APK attached to the latest release.
 
-The debug application ID is `com.veedy.driftlight.debug`, so it installs separately from Moonlight and Artemis.
+```bash
+adb install -r Driftlight-1.0.1-debug.apk
+```
+
+Driftlight uses the application ID `com.veedy.driftlight.debug`, so it can live beside Moonlight and Artemis.
+
+## Compatible hosts
+
+- [Moonshine](https://github.com/hgaiser/moonshine)
+- [Sunshine](https://github.com/LizardByte/Sunshine)
+- [Apollo](https://github.com/ClassicOldSong/Apollo)
+- Other Moonlight-compatible GameStream hosts
 
 ## Build
 
-Requirements:
-
-- JDK 17
-- Android SDK 35
-- Android NDK `27.0.12077973`
+Requirements: JDK 17, Android SDK 35, Android NDK `27.0.12077973`.
 
 ```bash
 git submodule update --init --recursive
@@ -57,13 +74,12 @@ The APK is written to:
 app/build/outputs/apk/nonRoot_game/debug/app-nonRoot_game-debug.apk
 ```
 
-The NDK build cannot handle project paths containing spaces. Use a space-free checkout path or the GitHub Actions workflow.
+> The Android NDK cannot build from paths containing spaces. Use a space-free checkout or the included GitHub Actions workflow.
 
-## Lineage and license
+## Lineage
 
-Driftlight is based on:
+Driftlight stands on the work of [Moonlight Android](https://github.com/moonlight-stream/moonlight-android) and [Artemis / Moonlight Noir](https://github.com/ClassicOldSong/moonlight-android). Existing upstream copyright and GPL-3.0 terms remain in force.
 
-- [Moonlight Android](https://github.com/moonlight-stream/moonlight-android)
-- [Artemis / Moonlight Noir](https://github.com/ClassicOldSong/moonlight-android)
+Original Moonlight authors include Cameron Gutman, Diego Waxemberg, Aaron Neyer, and Andrew Hennessy.
 
-Original Moonlight authors include Cameron Gutman, Diego Waxemberg, Aaron Neyer, and Andrew Hennessy. Existing upstream copyright and license terms remain in force.
+Driftlight uses [Unbounded](store-assets/fonts/Unbounded-OFL.txt) and [Outfit](store-assets/fonts/Outfit-OFL.txt), distributed under the SIL Open Font License 1.1.
