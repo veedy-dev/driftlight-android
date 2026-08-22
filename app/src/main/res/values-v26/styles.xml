@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:fontFamily">@font/outfit_regular</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@color/drift_bg</item>
+        <item name="android:navigationBarColor">@color/drift_bg</item>
+        <item name="android:statusBarColor">@color/drift_bg</item>
+        <item name="colorPrimary">@color/drift_primary</item>
+        <item name="colorOnPrimary">@color/drift_on_primary</item>
+        <item name="colorSecondary">@color/drift_primary</item>
+        <item name="colorOnSecondary">@color/drift_on_primary</item>
+        <item name="colorSurface">@color/drift_surface</item>
+        <item name="colorOnSurface">@color/drift_text</item>
+        <item name="colorSurfaceVariant">@color/drift_surface_high</item>
+        <item name="colorOnSurfaceVariant">@color/drift_text_muted</item>
+        <item name="colorOutline">@color/drift_outline</item>
+        <item name="colorError">@color/drift_error</item>
+        <item name="android:colorAccent">@color/drift_primary</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Driftlight.MaterialAlertDialog</item>
+    </style>
+
+    <style name="TextAppearance.Driftlight.ScreenTitle" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/unbounded_bold</item>
+        <item name="android:textColor">@color/drift_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">-0.03</item>
+    </style>
+
+    <style name="TextAppearance.Driftlight.Section" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/outfit_medium</item>
+        <item name="android:textColor">@color/drift_text_muted</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+</resources>
