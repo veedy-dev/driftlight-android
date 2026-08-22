@@ -37,7 +37,7 @@ Driftlight keeps the proven streaming core and builds those controls into the cl
 ## The client
 
 <p align="center">
-  <img src="docs/assets/readme-screens.png" width="100%" alt="Driftlight host library and settings screens">
+  <img src="docs/assets/readme-screens.png" width="100%" alt="Driftlight host library and live Moonshine stream captured on an AYN Odin 3">
 </p>
 
 The interface uses one mineral-dark palette, one mint focus signal, and two authored typefaces: **Unbounded** for identity and **Outfit** for operational UI. The Drift Gate icon is hand-built SVG — no generated mascot art.
