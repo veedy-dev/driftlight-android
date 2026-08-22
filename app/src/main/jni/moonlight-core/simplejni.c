@@ -21,6 +21,11 @@ Java_com_limelight_nvstream_jni_MoonBridge_sendExecServerCmd(JNIEnv *env, jclass
     LiSendExecServerCmd(cmdId);
 }
 
+JNIEXPORT jboolean JNICALL
+Java_com_limelight_nvstream_jni_MoonBridge_sendControlPing(JNIEnv *env, jclass clazz) {
+    return LiSendControlPing() > 0 ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT void JNICALL
 Java_com_limelight_nvstream_jni_MoonBridge_sendMousePosition(JNIEnv *env, jclass clazz,
                                                              jshort x, jshort y, jshort referenceWidth, jshort referenceHeight) {

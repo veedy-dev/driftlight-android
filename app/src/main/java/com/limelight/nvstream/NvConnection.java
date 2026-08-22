@@ -484,6 +484,10 @@ public class NvConnection {
             MoonBridge.sendExecServerCmd(cmdId);
         }
     }
+
+    public boolean sendControlPing() {
+        return isMonkey || MoonBridge.sendControlPing();
+    }
     
     public void sendMouseMove(final short deltaX, final short deltaY)
     {

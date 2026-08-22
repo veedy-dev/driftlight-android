@@ -68,6 +68,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.os.VibrationEffect;
@@ -89,6 +90,8 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.ViewParent;
 import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.view.inputmethod.InputMethodManager;
@@ -137,6 +140,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     private static final int THREE_FINGER_TAP_THRESHOLD = 300;
     private static final int FOUR_FINGER_TAP_THRESHOLD = 300;
+    private static final long CONTROL_KEEPALIVE_INTERVAL_MS = 5_000;
 
     private ControllerHandler controllerHandler;
     private KeyboardTranslator keyboardTranslator;
@@ -155,6 +159,19 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     private int currentOrientation;
 
     private NvConnection conn;
+    private final Handler controlKeepAliveHandler = new Handler(Looper.getMainLooper());
+    private final Runnable controlKeepAliveRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!connected || conn == null) {
+                return;
+            }
+            if (!conn.sendControlPing()) {
+                LimeLog.warning("Control keepalive ping failed");
+            }
+            controlKeepAliveHandler.postDelayed(this, CONTROL_KEEPALIVE_INTERVAL_MS);
+        }
+    };
     private SpinnerDialog spinner;
     private boolean displayedFailureDialog = false;
     private boolean connecting = false;
@@ -294,6 +311,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
         // Inflate the content
         setContentView(R.layout.activity_game);
+        hideSystemUi(0);
 
         clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -737,6 +755,15 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                         hideSystemUi(100);
                     }
                 });
+    }
+
+    private void startControlKeepAlive() {
+        controlKeepAliveHandler.removeCallbacks(controlKeepAliveRunnable);
+        controlKeepAliveHandler.postDelayed(controlKeepAliveRunnable, 1_000);
+    }
+
+    private void stopControlKeepAlive() {
+        controlKeepAliveHandler.removeCallbacks(controlKeepAliveRunnable);
     }
 
     //显示隐藏虚拟特殊按键
@@ -1253,17 +1280,29 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     private final Runnable hideSystemUi = new Runnable() {
         @Override
         public void run() {
-            // TODO: Do we want to use WindowInsetsController here on R+ instead of
-            // SYSTEM_UI_FLAG_IMMERSIVE_STICKY? They seem to do the same thing as of S...
+            boolean multiWindow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Window window = Game.this.getWindow();
+                WindowInsetsController controller = window.getInsetsController();
+                window.setDecorFitsSystemWindows(multiWindow);
+                if (controller != null) {
+                    if (multiWindow) {
+                        controller.show(WindowInsets.Type.systemBars());
+                    }
+                    else {
+                        controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                        controller.setSystemBarsBehavior(
+                                WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                    }
+                }
+                return;
+            }
 
-            // In multi-window mode on N+, we need to drop our layout flags or we'll
-            // be drawing underneath the system UI.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
+            if (multiWindow) {
                 Game.this.getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             }
             else {
-                // Use immersive mode
                 Game.this.getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
                                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
@@ -1310,6 +1349,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         super.onDestroy();
 
         instance = null;
+        stopControlKeepAlive();
 
         if(presentation!=null){
             presentation.dismiss();
@@ -2903,6 +2943,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     private void stopConnection() {
         if (connecting || connected) {
             connecting = connected = false;
+            stopControlKeepAlive();
             updatePipAutoEnter();
 
             controllerHandler.stop();
@@ -3119,6 +3160,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                 connected = true;
                 connecting = false;
                 updatePipAutoEnter();
+                startControlKeepAlive();
 
                 // Hide the mouse cursor now after a short delay.
                 // Doing it before dismissing the spinner seems to be undone
