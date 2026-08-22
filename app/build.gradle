@@ -11,14 +11,15 @@ android {
         minSdk 21
         targetSdk 34
 
-        versionName "1.0.2"
-        versionCode = 3
+        versionName "0.1.0"
+        versionCode = 1
 
         // Generate native debug symbols to allow Google Play to symbolicate our native crashes
         ndk.debugSymbolLevel = 'FULL'
     }
 
     flavorDimensions.add("root")
+
 
     buildFeatures {
         buildConfig = true
@@ -98,6 +99,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
+
             resValue "string", "app_label", "Driftlight"
             resValue "string", "app_label_root", "Driftlight (Root)"
             resValue "string", "app_label_game", "Driftlight"
