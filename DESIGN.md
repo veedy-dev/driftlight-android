@@ -53,7 +53,7 @@ One palette everywhere. Pale mint is the only accent.
 - **Library cards:** `14dp` corners, Graphite fill, one Mineral Line stroke. Use cards only for hosts, artwork, or an actual elevation boundary.
 - **Quick-control rail:** `332dp` right panel with five `64dp` rows. Full keys, Alt+Tab, Android keyboard, Task manager, More — always in that order.
 - **Idle overlay:** The normal handle collapses after three seconds into a visually `4dp` Signal Mint stripe while retaining a transparent `48dp` touch target.
-- **Desktop keyboard:** Six rows with at least `48dp` per row. Sticky modifiers use Signal Ink plus a Signal Mint outline.
+- **Desktop keyboard:** Compact `180–240dp` sheet with explicit `2dp` key gutters and at least `94%` opacity so host content does not visually collide with labels. Sticky modifiers use Signal Ink plus a Signal Mint outline.
 - **Inputs:** Label above or within the standard Material outline, `12dp` corners, helper/error text below. Never use floating decoration that competes with the value.
 - **Loading:** Prefer layout-shaped skeletons. For indeterminate host discovery, use one branded mint arc and specific recovery copy — never a stack of generic spinners.
 - **Empty states:** Explain both the state and the next action. Host discovery explicitly points to manual IP entry.

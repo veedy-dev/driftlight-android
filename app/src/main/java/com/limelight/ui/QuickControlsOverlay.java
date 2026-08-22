@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.limelight.R;
@@ -33,6 +34,7 @@ public final class QuickControlsOverlay {
     private final FrameLayout layer;
     private final View scrim;
     private final LinearLayout panel;
+    private final LinearLayout actionList;
     private final ImageButton handle;
     private final Runnable minimizeHandleRunnable = this::minimizeHandle;
     private boolean handleMinimized;
@@ -88,6 +90,17 @@ public final class QuickControlsOverlay {
         panel.addView(title, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(56)));
 
+        ScrollView actionScroll = new ScrollView(activity);
+        actionScroll.setFillViewport(true);
+        actionScroll.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+        actionList = new LinearLayout(activity);
+        actionList.setOrientation(LinearLayout.VERTICAL);
+        actionScroll.addView(actionList, new ScrollView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        panel.addView(actionScroll, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+
         addAction(R.string.quick_full_keys, R.drawable.ic_quick_full_keys,
                 callbacks::toggleFullKeyboard);
         addAction(R.string.quick_alt_tab, R.drawable.ic_quick_switch,
@@ -125,6 +138,7 @@ public final class QuickControlsOverlay {
         });
         FrameLayout.LayoutParams handleParams = new FrameLayout.LayoutParams(
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
+        handleParams.rightMargin = dp(10);
         layer.addView(handle, handleParams);
 
         collapse(false);
@@ -155,11 +169,16 @@ public final class QuickControlsOverlay {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(64));
         params.topMargin = dp(8);
-        panel.addView(view, params);
+        actionList.addView(view, params);
     }
 
     public boolean isExpanded() {
         return expanded;
+    }
+
+    public void bringHandleToFront() {
+        layer.bringToFront();
+        handle.bringToFront();
     }
 
     public void expand() {
@@ -172,8 +191,8 @@ public final class QuickControlsOverlay {
         scrim.setVisibility(View.VISIBLE);
         panel.setVisibility(View.VISIBLE);
         handle.setVisibility(View.GONE);
-        if (panel.getChildCount() > 1) {
-            panel.getChildAt(1).requestFocus();
+        if (actionList.getChildCount() > 0) {
+            actionList.getChildAt(0).requestFocus();
         }
     }
 
@@ -183,6 +202,8 @@ public final class QuickControlsOverlay {
 
     private void collapse(boolean restoreFocus) {
         expanded = false;
+        layer.setVisibility(View.VISIBLE);
+        bringHandleToFront();
         scrim.setVisibility(View.GONE);
         panel.setVisibility(View.GONE);
         showFullHandle();
@@ -229,6 +250,7 @@ public final class QuickControlsOverlay {
         handle.setPadding(0, 0, 0, 0);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 dp(48), dp(72), Gravity.END | Gravity.CENTER_VERTICAL);
+        params.rightMargin = dp(10);
         handle.setLayoutParams(params);
     }
 
@@ -241,6 +263,7 @@ public final class QuickControlsOverlay {
         handle.setPadding(dp(14), dp(18), dp(10), dp(18));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
+        params.rightMargin = dp(10);
         handle.setLayoutParams(params);
     }
 

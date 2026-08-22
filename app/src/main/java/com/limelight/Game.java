@@ -768,29 +768,41 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     //显示隐藏虚拟特殊按键
     public void showHideKeyboardController(){
-        if(keyBoardController==null){
+        if (keyBoardController == null) {
             initKeyboardController();
-            return;
         }
-        keyBoardController.toggleVisibility();
+        else {
+            keyBoardController.toggleVisibility();
+        }
+        if (quickControlsOverlay != null) {
+            quickControlsOverlay.bringHandleToFront();
+        }
     }
 
     public void showHidekeyBoardLayoutController(){
-        if(keyBoardLayoutController==null){
+        if (keyBoardLayoutController == null) {
             initkeyBoardLayoutController();
-            return;
         }
-        keyBoardLayoutController.toggleVisibility();
+        else {
+            keyBoardLayoutController.toggleVisibility();
+        }
+        if (quickControlsOverlay != null) {
+            quickControlsOverlay.bringHandleToFront();
+        }
     }
 
     //显示隐藏虚拟手柄控制器
     public void showHideVirtualController(){
-        if(virtualController==null){
+        if (virtualController == null) {
             initVirtualController();
-            prefConfig.onscreenController=true;
-            return;
+            prefConfig.onscreenController = true;
         }
-        prefConfig.onscreenController= virtualController.switchShowHide() != 0;
+        else {
+            prefConfig.onscreenController = virtualController.switchShowHide() != 0;
+        }
+        if (quickControlsOverlay != null) {
+            quickControlsOverlay.bringHandleToFront();
+        }
     }
 
     private void setPreferredOrientationForCurrentDisplay() {

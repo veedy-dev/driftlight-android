@@ -36,7 +36,9 @@ public class KeyBoardLayoutController {
     private static final Set<Integer> MODIFIER_KEY_CODES = new HashSet<>();
     private static final Set<Integer> SPECIAL_KEY_CODES = new HashSet<>();
     private static final long POPUP_DURATION_MS = 75;
-    private static final int MIN_KEYBOARD_HEIGHT_DP = 300;
+    private static final int MIN_KEYBOARD_HEIGHT_DP = 180;
+    private static final int MAX_KEYBOARD_HEIGHT_DP = 240;
+    private static final float MIN_KEYBOARD_OPACITY = 0.94f;
 
     private final long timerLongClickTimeout = 300;
     private final Context context;
@@ -301,7 +303,8 @@ public class KeyBoardLayoutController {
         frame_layout.removeView(keyboardView);
         // DisplayMetrics screen = context.getResources().getDisplayMetrics();
         // (int)(screen.heightPixels/0.4)/
-        int height = Math.max(prefConfig.onscreenKeyboardHeight, MIN_KEYBOARD_HEIGHT_DP);
+        int height = Math.max(MIN_KEYBOARD_HEIGHT_DP,
+                Math.min(prefConfig.onscreenKeyboardHeight, MAX_KEYBOARD_HEIGHT_DP));
         int widthPreference = prefConfig.onscreenKeyboardWidth;
         int width = widthPreference == 1000 ? ViewGroup.LayoutParams.MATCH_PARENT : dip2px(context, widthPreference);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, dip2px(context, height));
@@ -323,7 +326,7 @@ public class KeyBoardLayoutController {
 
         // params.leftMargin = 20 + buttonSize;
         // params.topMargin = 15;
-        keyboardView.setAlpha(prefConfig.oscKeyboardOpacity / 100f);
+        keyboardView.setAlpha(Math.max(prefConfig.oscKeyboardOpacity / 100f, MIN_KEYBOARD_OPACITY));
         frame_layout.addView(keyboardView, params);
     }
 

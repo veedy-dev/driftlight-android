@@ -432,24 +432,24 @@
             android:title="@string/title_enable_quick_controls"
             app:iconSpaceReserved="false" />
         <com.limelight.preferences.SeekBarPreference
-            android:defaultValue="90"
+            android:defaultValue="100"
             android:key="seekbar_keyboard_axi_opacity"
             android:max="100"
             android:summary="@string/summary_osc_opacity"
             android:text="%"
             android:title="@string/title_keyboard_opacity"
             app:iconSpaceReserved="false"
-            seekbar:min="0"
+            seekbar:min="94"
             seekbar:step="1" />
         <com.limelight.preferences.SeekBarPreference
-            android:defaultValue="320"
+            android:defaultValue="210"
             android:key="seekbar_onscreen_keyboard_height"
-            android:max="480"
+            android:max="240"
             android:summary="@string/summary_onscreen_keyboard_height"
             android:text="dp"
             android:title="@string/title_onscreen_keyboard_height"
             app:iconSpaceReserved="false"
-            seekbar:min="300"
+            seekbar:min="180"
             seekbar:step="10" />
         <com.limelight.preferences.SeekBarPreference
             android:defaultValue="1000"
