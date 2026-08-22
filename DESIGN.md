@@ -79,6 +79,7 @@ The stream is always the primary surface. Client chrome stays compact until the 
 - Matte tonal depth instead of glass or glow
 - Large, explicit actions with concise labels
 - One mint signal color across connection, focus, progress, and active modifiers
+- Soft-3D Drift Sprite mascot with a simple dark-mode-first silhouette
 
 ## Colors
 

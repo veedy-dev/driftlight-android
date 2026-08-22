@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 /** Minimal, controller-friendly desktop controls that stay out of the stream when collapsed. */
 public final class QuickControlsOverlay {
+    private static final long HANDLE_IDLE_TIMEOUT_MS = 3_000;
     public interface Callbacks {
         void toggleFullKeyboard();
         void sendAltTab();
@@ -33,6 +34,8 @@ public final class QuickControlsOverlay {
     private final View scrim;
     private final LinearLayout panel;
     private final ImageButton handle;
+    private final Runnable minimizeHandleRunnable = this::minimizeHandle;
+    private boolean handleMinimized;
     private boolean expanded;
     private boolean expandedBeforePip;
 
@@ -105,6 +108,12 @@ public final class QuickControlsOverlay {
         handle.setScaleType(ImageButton.ScaleType.FIT_CENTER);
         handle.setFocusable(true);
         handle.setClickable(true);
+        handle.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && handleMinimized) {
+                showFullHandle();
+                scheduleHandleMinimize();
+            }
+        });
         handle.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             expand();
@@ -152,6 +161,7 @@ public final class QuickControlsOverlay {
         if (layer.getVisibility() != View.VISIBLE) {
             return;
         }
+        handle.removeCallbacks(minimizeHandleRunnable);
         layer.bringToFront();
         expanded = true;
         scrim.setVisibility(View.VISIBLE);
@@ -170,7 +180,8 @@ public final class QuickControlsOverlay {
         expanded = false;
         scrim.setVisibility(View.GONE);
         panel.setVisibility(View.GONE);
-        handle.setVisibility(View.VISIBLE);
+        showFullHandle();
+        scheduleHandleMinimize();
         if (restoreFocus) {
             callbacks.restoreStreamFocus();
         }
@@ -178,6 +189,7 @@ public final class QuickControlsOverlay {
 
     public void hideForPip() {
         expandedBeforePip = expanded;
+        handle.removeCallbacks(minimizeHandleRunnable);
         layer.setVisibility(View.GONE);
     }
 
@@ -192,7 +204,39 @@ public final class QuickControlsOverlay {
     }
 
     public void hide() {
+        handle.removeCallbacks(minimizeHandleRunnable);
         layer.setVisibility(View.GONE);
+    }
+
+    private void scheduleHandleMinimize() {
+        handle.removeCallbacks(minimizeHandleRunnable);
+        handle.postDelayed(minimizeHandleRunnable, HANDLE_IDLE_TIMEOUT_MS);
+    }
+
+    private void minimizeHandle() {
+        if (expanded || layer.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        handleMinimized = true;
+        handle.setImageDrawable(null);
+        handle.setBackgroundResource(R.drawable.drift_quick_handle_minimized);
+        handle.setAlpha(0.62f);
+        handle.setPadding(0, 0, 0, 0);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                dp(48), dp(72), Gravity.END | Gravity.CENTER_VERTICAL);
+        handle.setLayoutParams(params);
+    }
+
+    private void showFullHandle() {
+        handleMinimized = false;
+        handle.setImageResource(R.drawable.ic_quick_controls);
+        handle.setColorFilter(color(R.color.drift_text));
+        handle.setBackgroundResource(R.drawable.drift_quick_handle);
+        handle.setAlpha(1.0f);
+        handle.setPadding(dp(14), dp(18), dp(10), dp(18));
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
+        handle.setLayoutParams(params);
     }
 
     private int color(int resource) {

@@ -146,32 +146,30 @@ public class UiHelper {
                     horizontalPaddingPixels, verticalPaddingPixels);
         }
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Draw under the status bar on Android Q devices
-
-            // Using getDecorView() here breaks the translucent status/navigation bar when gestures are disabled
-            activity.findViewById(android.R.id.content).setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-                    // Use the tappable insets so we can draw under the status bar in gesture mode
-                    Insets tappableInsets = windowInsets.getTappableElementInsets();
-                    view.setPadding(tappableInsets.left,
-                            tappableInsets.top,
-                            tappableInsets.right,
-                            0);
-
-                    // Show a translucent navigation bar if we can't tap there
-                    if (tappableInsets.bottom != 0) {
-                        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    }
-                    else {
-                        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    }
-
-                    return windowInsets;
+            rootView.setOnApplyWindowInsetsListener((view, windowInsets) -> {
+                int left;
+                int top;
+                int right;
+                int bottom;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Insets systemBars = windowInsets.getInsets(WindowInsets.Type.systemBars());
+                    left = systemBars.left;
+                    top = systemBars.top;
+                    right = systemBars.right;
+                    bottom = systemBars.bottom;
                 }
+                else {
+                    left = windowInsets.getSystemWindowInsetLeft();
+                    top = windowInsets.getSystemWindowInsetTop();
+                    right = windowInsets.getSystemWindowInsetRight();
+                    bottom = windowInsets.getSystemWindowInsetBottom();
+                }
+                view.setPadding(left, top, right, bottom);
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                return windowInsets;
             });
-
-            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            rootView.requestApplyInsets();
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
     }
 
