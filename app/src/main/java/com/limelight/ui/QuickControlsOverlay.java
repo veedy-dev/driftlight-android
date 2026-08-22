@@ -179,23 +179,22 @@ public final class QuickControlsOverlay {
                 case MotionEvent.ACTION_DOWN:
                     handleTouchDownX = event.getRawX();
                     handle.removeCallbacks(minimizeHandleRunnable);
-                    return true;
+                    return false;
                 case MotionEvent.ACTION_UP:
                     if (handleMinimized && handleTouchDownX - event.getRawX() >= dp(24)) {
+                        v.setPressed(false);
                         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                         revealHandle();
+                        return true;
                     }
-                    else {
-                        v.performClick();
-                    }
-                    return true;
+                    return false;
                 case MotionEvent.ACTION_CANCEL:
                     if (!expanded) {
                         scheduleHandleMinimize();
                     }
-                    return true;
+                    return false;
                 default:
-                    return true;
+                    return false;
             }
         });
         FrameLayout.LayoutParams handleParams = new FrameLayout.LayoutParams(
