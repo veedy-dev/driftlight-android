@@ -256,6 +256,7 @@ public final class QuickControlsOverlay {
 
     private void showFullHandle() {
         handleMinimized = false;
+        handle.setVisibility(View.VISIBLE);
         handle.setImageResource(R.drawable.ic_quick_controls);
         handle.setColorFilter(color(R.color.drift_text));
         handle.setBackgroundResource(R.drawable.drift_quick_handle);
