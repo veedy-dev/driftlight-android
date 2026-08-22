@@ -592,6 +592,8 @@
     <string name="summary_enable_quick_controls">Adds a small edge handle for desktop keys and shortcuts while streaming</string>
     <string name="quick_controls_title">Quick controls</string>
     <string name="quick_controls_open">Open quick controls</string>
+    <string name="quick_controls_reveal">Reveal quick controls</string>
+    <string name="quick_session_actions">Session actions</string>
     <string name="quick_full_keys">Full keys</string>
     <string name="quick_alt_tab">Alt + Tab</string>
     <string name="quick_android_keyboard">Android keyboard</string>

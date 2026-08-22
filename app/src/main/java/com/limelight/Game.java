@@ -750,6 +750,25 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                     }
 
                     @Override
+                    public void showSessionActions() {
+                        new MaterialAlertDialogBuilder(Game.this)
+                                .setTitle(R.string.quick_session_actions)
+                                .setItems(new CharSequence[]{
+                                        getString(R.string.game_menu_disconnect),
+                                        getString(R.string.game_menu_quit_session)
+                                }, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    if (which == 0) {
+                                        disconnect();
+                                    }
+                                    else {
+                                        quit();
+                                    }
+                                })
+                                .show();
+                    }
+
+                    @Override
                     public void restoreStreamFocus() {
                         streamView.requestFocus();
                         hideSystemUi(100);

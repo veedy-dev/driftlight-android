@@ -51,9 +51,9 @@ One palette everywhere. Pale mint is the only accent.
 - **Primary actions:** Signal Mint fill with Signal Ink foreground, `12dp` corners, at least `48dp` high. Pressed state moves inward by `1dp`; no outer glow.
 - **Secondary actions:** Raised Graphite fill, Mineral Line border, Warm White label. Focus adds a `2dp` Signal Mint outline and Signal Ink fill.
 - **Library cards:** `14dp` corners, Graphite fill, one Mineral Line stroke. Use cards only for hosts, artwork, or an actual elevation boundary.
-- **Quick-control rail:** `332dp` right panel with five `64dp` rows. Full keys, Alt+Tab, Android keyboard, Task manager, More — always in that order.
-- **Idle overlay:** The normal handle collapses after three seconds into a visually `4dp` Signal Mint stripe while retaining a transparent `48dp` touch target.
-- **Desktop keyboard:** Compact `180–240dp` sheet with explicit `2dp` key gutters and at least `94%` opacity so host content does not visually collide with labels. Sticky modifiers use Signal Ink plus a Signal Mint outline.
+- **Quick-control rail:** A flush-right `332dp` drawer with five `64dp` rows and a compact session-actions button in the header. Full keys, Alt+Tab, Android keyboard, Task manager, More — always in that order.
+- **Idle overlay:** The normal handle collapses after three seconds into a visually `4dp` Signal Mint stripe while retaining a transparent `48dp` touch target. Swipe inward or tap the stripe to reveal the Material Symbols handle; tap the revealed handle to open the drawer.
+- **Desktop keyboard:** Compact `180–240dp` edge-to-edge sheet with explicit `2dp` key gutters and at least `94%` opacity so host content does not visually collide with labels. Sticky modifiers use Signal Ink plus a Signal Mint outline.
 - **Inputs:** Label above or within the standard Material outline, `12dp` corners, helper/error text below. Never use floating decoration that competes with the value.
 - **Loading:** Prefer layout-shaped skeletons. For indeterminate host discovery, use one branded mint arc and specific recovery copy — never a stack of generic spinners.
 - **Empty states:** Explain both the state and the next action. Host discovery explicitly points to manual IP entry.
@@ -75,7 +75,7 @@ One palette everywhere. Pale mint is the only accent.
 - Use spring-like native motion equivalent to **stiffness 100 / damping 20**; never linear easing.
 - Animate only `transform` and `opacity`. Layout width changes occur discretely before or after the animation.
 - Lists may fade through in a short cascade, but streaming frames and input paths never wait on animation.
-- The quick-control handle fades to its stripe state after three seconds of inactivity and restores immediately on focus or touch.
+- The quick-control drawer decelerates in from the right edge. Its handle and stripe use short transform-and-opacity transitions; the stripe first reveals the handle rather than opening the drawer directly.
 - Active connection progress may loop; stable controls remain still so gameplay is not visually noisy.
 - Respect Android’s Remove animations setting by replacing motion with an immediate state change.
 

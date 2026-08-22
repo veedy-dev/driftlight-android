@@ -6,8 +6,10 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,12 +22,18 @@ import androidx.core.content.ContextCompat;
 /** Minimal, controller-friendly desktop controls that stay out of the stream when collapsed. */
 public final class QuickControlsOverlay {
     private static final long HANDLE_IDLE_TIMEOUT_MS = 3_000;
+    private static final long HANDLE_MOTION_DURATION_MS = 160;
+    private static final long PANEL_ENTER_DURATION_MS = 200;
+    private static final long PANEL_EXIT_DURATION_MS = 150;
+    private static final DecelerateInterpolator MOTION_EASING =
+            new DecelerateInterpolator(1.5f);
     public interface Callbacks {
         void toggleFullKeyboard();
         void sendAltTab();
         void toggleSystemKeyboard();
         void sendTaskManager();
         void showMore();
+        void showSessionActions();
         void restoreStreamFocus();
     }
 
@@ -40,6 +48,7 @@ public final class QuickControlsOverlay {
     private boolean handleMinimized;
     private boolean expanded;
     private boolean expandedBeforePip;
+    private float handleTouchDownX;
 
     public QuickControlsOverlay(Activity activity, ViewGroup root, Callbacks callbacks) {
         this.activity = activity;
@@ -77,8 +86,11 @@ public final class QuickControlsOverlay {
         });
         FrameLayout.LayoutParams panelParams = new FrameLayout.LayoutParams(
                 dp(332), ViewGroup.LayoutParams.MATCH_PARENT, Gravity.END);
-        panelParams.setMargins(0, dp(12), dp(12), dp(12));
         layer.addView(panel, panelParams);
+
+        LinearLayout header = new LinearLayout(activity);
+        header.setOrientation(LinearLayout.HORIZONTAL);
+        header.setGravity(Gravity.CENTER_VERTICAL);
 
         TextView title = new TextView(activity);
         title.setText(R.string.quick_controls_title);
@@ -86,13 +98,31 @@ public final class QuickControlsOverlay {
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
         title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setPadding(dp(14), 0, dp(14), dp(12));
-        panel.addView(title, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, dp(56)));
+        title.setPadding(dp(14), 0, dp(8), 0);
+        header.addView(title, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
+
+        ImageButton sessionButton = new ImageButton(activity);
+        sessionButton.setImageResource(R.drawable.ic_quick_session);
+        sessionButton.setColorFilter(color(R.color.drift_text));
+        sessionButton.setContentDescription(activity.getString(R.string.quick_session_actions));
+        sessionButton.setBackgroundResource(R.drawable.drift_quick_action);
+        sessionButton.setPadding(dp(16), dp(16), dp(16), dp(16));
+        sessionButton.setFocusable(true);
+        sessionButton.setClickable(true);
+        sessionButton.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            collapse();
+            layer.postDelayed(callbacks::showSessionActions, PANEL_EXIT_DURATION_MS + 20);
+        });
+        header.addView(sessionButton, new LinearLayout.LayoutParams(dp(56), dp(56)));
+        panel.addView(header, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(64)));
 
         ScrollView actionScroll = new ScrollView(activity);
         actionScroll.setFillViewport(true);
         actionScroll.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+        actionScroll.setVerticalScrollBarEnabled(false);
         actionList = new LinearLayout(activity);
         actionList.setOrientation(LinearLayout.VERTICAL);
         actionScroll.addView(actionList, new ScrollView.LayoutParams(
@@ -134,7 +164,36 @@ public final class QuickControlsOverlay {
         });
         handle.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            expand();
+            if (handleMinimized) {
+                revealHandle();
+            }
+            else {
+                expand();
+            }
+        });
+        handle.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    handleTouchDownX = event.getRawX();
+                    handle.removeCallbacks(minimizeHandleRunnable);
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    if (handleMinimized && handleTouchDownX - event.getRawX() >= dp(24)) {
+                        v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        revealHandle();
+                    }
+                    else {
+                        v.performClick();
+                    }
+                    return true;
+                case MotionEvent.ACTION_CANCEL:
+                    if (!expanded) {
+                        scheduleHandleMinimize();
+                    }
+                    return true;
+                default:
+                    return true;
+            }
         });
         FrameLayout.LayoutParams handleParams = new FrameLayout.LayoutParams(
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
@@ -164,7 +223,7 @@ public final class QuickControlsOverlay {
         view.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             collapse();
-            layer.postDelayed(action, 80);
+            layer.postDelayed(action, PANEL_EXIT_DURATION_MS + 20);
         });
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(64));
@@ -186,11 +245,25 @@ public final class QuickControlsOverlay {
             return;
         }
         handle.removeCallbacks(minimizeHandleRunnable);
+        panel.animate().cancel();
+        scrim.animate().cancel();
         layer.bringToFront();
         expanded = true;
-        scrim.setVisibility(View.VISIBLE);
-        panel.setVisibility(View.VISIBLE);
         handle.setVisibility(View.GONE);
+        scrim.setAlpha(0f);
+        scrim.setVisibility(View.VISIBLE);
+        scrim.animate()
+                .alpha(1f)
+                .setDuration(PANEL_ENTER_DURATION_MS)
+                .setInterpolator(MOTION_EASING)
+                .start();
+        panel.setTranslationX(dp(332));
+        panel.setVisibility(View.VISIBLE);
+        panel.animate()
+                .translationX(0f)
+                .setDuration(PANEL_ENTER_DURATION_MS)
+                .setInterpolator(MOTION_EASING)
+                .start();
         if (actionList.getChildCount() > 0) {
             actionList.getChildAt(0).requestFocus();
         }
@@ -201,13 +274,45 @@ public final class QuickControlsOverlay {
     }
 
     private void collapse(boolean restoreFocus) {
+        boolean animate = expanded && panel.getVisibility() == View.VISIBLE;
         expanded = false;
         layer.setVisibility(View.VISIBLE);
         bringHandleToFront();
-        scrim.setVisibility(View.GONE);
-        panel.setVisibility(View.GONE);
-        showFullHandle();
-        scheduleHandleMinimize();
+        panel.animate().cancel();
+        scrim.animate().cancel();
+        if (animate) {
+            scrim.animate()
+                    .alpha(0f)
+                    .setDuration(PANEL_EXIT_DURATION_MS)
+                    .setInterpolator(MOTION_EASING)
+                    .withEndAction(() -> {
+                        if (!expanded) {
+                            scrim.setVisibility(View.GONE);
+                        }
+                    })
+                    .start();
+            panel.animate()
+                    .translationX(dp(332))
+                    .setDuration(PANEL_EXIT_DURATION_MS)
+                    .setInterpolator(MOTION_EASING)
+                    .withEndAction(() -> {
+                        if (!expanded) {
+                            panel.setVisibility(View.GONE);
+                            panel.setTranslationX(0f);
+                            showFullHandle();
+                            scheduleHandleMinimize();
+                        }
+                    })
+                    .start();
+        }
+        else {
+            scrim.setVisibility(View.GONE);
+            scrim.setAlpha(1f);
+            panel.setVisibility(View.GONE);
+            panel.setTranslationX(0f);
+            showFullHandle();
+            scheduleHandleMinimize();
+        }
         if (restoreFocus) {
             callbacks.restoreStreamFocus();
         }
@@ -243,29 +348,52 @@ public final class QuickControlsOverlay {
         if (expanded || layer.getVisibility() != View.VISIBLE) {
             return;
         }
+        handle.animate().cancel();
         handleMinimized = true;
+        handle.setContentDescription(activity.getString(R.string.quick_controls_reveal));
         handle.setImageDrawable(null);
         handle.setBackgroundResource(R.drawable.drift_quick_handle_minimized);
-        handle.setAlpha(0.62f);
         handle.setPadding(0, 0, 0, 0);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 dp(48), dp(72), Gravity.END | Gravity.CENTER_VERTICAL);
         params.rightMargin = dp(10);
         handle.setLayoutParams(params);
+        handle.setAlpha(0f);
+        handle.setTranslationX(dp(12));
+        handle.animate()
+                .alpha(0.62f)
+                .translationX(0f)
+                .setDuration(HANDLE_MOTION_DURATION_MS)
+                .setInterpolator(MOTION_EASING)
+                .start();
+    }
+
+    private void revealHandle() {
+        showFullHandle();
+        scheduleHandleMinimize();
     }
 
     private void showFullHandle() {
+        handle.animate().cancel();
         handleMinimized = false;
+        handle.setContentDescription(activity.getString(R.string.quick_controls_open));
         handle.setVisibility(View.VISIBLE);
         handle.setImageResource(R.drawable.ic_quick_controls);
         handle.setColorFilter(color(R.color.drift_text));
         handle.setBackgroundResource(R.drawable.drift_quick_handle);
-        handle.setAlpha(1.0f);
         handle.setPadding(dp(14), dp(18), dp(10), dp(18));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
         params.rightMargin = dp(10);
         handle.setLayoutParams(params);
+        handle.setAlpha(0f);
+        handle.setTranslationX(dp(16));
+        handle.animate()
+                .alpha(1f)
+                .translationX(0f)
+                .setDuration(HANDLE_MOTION_DURATION_MS)
+                .setInterpolator(MOTION_EASING)
+                .start();
     }
 
     private int color(int resource) {
