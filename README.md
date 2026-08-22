@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml"><img alt="Build" src="https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml/badge.svg?branch=driftlight"></a>
   <img alt="Android 5.0+" src="https://img.shields.io/badge/Android-5.0%2B-9FE7D0?logo=android&logoColor=06261F">
-  <img alt="Version 1.0.1" src="https://img.shields.io/badge/release-1.0.1-202826">
+  <img alt="Version 1.0.2" src="https://img.shields.io/badge/release-1.0.2-202826">
   <a href="LICENSE.txt"><img alt="GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-AAB4AF"></a>
 </p>
 
