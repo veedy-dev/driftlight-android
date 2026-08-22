@@ -109,8 +109,13 @@ public final class QuickControlsOverlay {
         handle.setFocusable(true);
         handle.setClickable(true);
         handle.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus && handleMinimized) {
-                showFullHandle();
+            if (hasFocus) {
+                handle.removeCallbacks(minimizeHandleRunnable);
+                if (handleMinimized) {
+                    showFullHandle();
+                }
+            }
+            else if (!expanded) {
                 scheduleHandleMinimize();
             }
         });
