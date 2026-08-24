@@ -3,6 +3,7 @@ package com.limelight;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
