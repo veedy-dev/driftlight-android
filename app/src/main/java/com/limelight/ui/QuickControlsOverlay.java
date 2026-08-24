@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewConfiguration;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -45,14 +46,22 @@ public final class QuickControlsOverlay {
     private final LinearLayout panel;
     private final LinearLayout actionList;
     private final ImageButton handle;
+    private final boolean onLeft;
+    private final int touchSlop;
     private final Runnable minimizeHandleRunnable = this::minimizeHandle;
     private boolean handleMinimized;
     private boolean expanded;
     private boolean expandedBeforePip;
     private float handleTouchDownX;
+    private float handleTouchDownY;
+    private float handleTouchDownCenterY;
+    private float handleCenterFraction = 0.5f;
+    private boolean handleDragging;
 
-    public QuickControlsOverlay(Activity activity, ViewGroup root, Callbacks callbacks) {
+    public QuickControlsOverlay(Activity activity, ViewGroup root, boolean onLeft, Callbacks callbacks) {
         this.activity = activity;
+        this.onLeft = onLeft;
+        this.touchSlop = ViewConfiguration.get(activity).getScaledTouchSlop();
         this.callbacks = callbacks;
 
         layer = new FrameLayout(activity);
@@ -76,7 +85,8 @@ public final class QuickControlsOverlay {
         panel = new LinearLayout(activity);
         panel.setOrientation(LinearLayout.VERTICAL);
         panel.setPadding(dp(18), dp(18), dp(18), dp(18));
-        panel.setBackgroundResource(R.drawable.drift_quick_panel);
+        panel.setBackgroundResource(onLeft ?
+                R.drawable.drift_quick_panel_left : R.drawable.drift_quick_panel);
         panel.setElevation(dp(18));
         panel.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
@@ -86,7 +96,7 @@ public final class QuickControlsOverlay {
             return false;
         });
         FrameLayout.LayoutParams panelParams = new FrameLayout.LayoutParams(
-                dp(332), ViewGroup.LayoutParams.MATCH_PARENT, Gravity.END);
+                dp(332), ViewGroup.LayoutParams.MATCH_PARENT, edgeGravity());
         layer.addView(panel, panelParams);
 
         LinearLayout header = new LinearLayout(activity);
@@ -110,6 +120,7 @@ public final class QuickControlsOverlay {
         sessionButton.setBackgroundResource(R.drawable.drift_quick_action);
         sessionButton.setPadding(dp(16), dp(16), dp(16), dp(16));
         sessionButton.setFocusable(true);
+        sessionButton.setFocusableInTouchMode(true);
         sessionButton.setClickable(true);
         sessionButton.setOnClickListener(v -> {
             if (!expanded) {
@@ -137,17 +148,17 @@ public final class QuickControlsOverlay {
 
         addAction(R.string.quick_full_keys, R.drawable.ic_quick_full_keys,
                 callbacks::toggleFullKeyboard);
-        addAction(R.string.quick_alt_tab, R.drawable.ic_quick_switch,
-                callbacks::sendAltTab);
         addAction(R.string.quick_android_keyboard, R.drawable.ic_quick_keyboard,
                 callbacks::toggleSystemKeyboard);
+        addAction(R.string.quick_alt_tab, R.drawable.ic_quick_switch,
+                callbacks::sendAltTab);
         addAction(R.string.quick_task_manager, R.drawable.ic_quick_tasks,
                 callbacks::sendTaskManager);
         addAction(R.string.quick_more, R.drawable.ic_quick_more,
                 callbacks::showMore);
 
         handle = new ImageButton(activity);
-        handle.setBackgroundResource(R.drawable.drift_quick_handle);
+        handle.setBackgroundResource(handleBackground());
         handle.setImageResource(R.drawable.ic_quick_controls);
         handle.setColorFilter(color(R.color.drift_text));
         handle.setContentDescription(activity.getString(R.string.quick_controls_open));
@@ -179,10 +190,32 @@ public final class QuickControlsOverlay {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     handleTouchDownX = event.getRawX();
+                    handleTouchDownY = event.getRawY();
+                    handleTouchDownCenterY = handle.getY() + handle.getHeight() / 2f;
+                    handleDragging = false;
                     handle.removeCallbacks(minimizeHandleRunnable);
                     return false;
+                case MotionEvent.ACTION_MOVE:
+                    if (!handleMinimized && !expanded &&
+                            Math.abs(event.getRawY() - handleTouchDownY) > touchSlop) {
+                        handleDragging = true;
+                        v.setPressed(false);
+                    }
+                    if (handleDragging) {
+                        moveHandleCenter(handleTouchDownCenterY +
+                                event.getRawY() - handleTouchDownY);
+                        return true;
+                    }
+                    return false;
                 case MotionEvent.ACTION_UP:
-                    if (handleMinimized && handleTouchDownX - event.getRawX() >= dp(24)) {
+                    if (handleDragging) {
+                        scheduleHandleMinimize();
+                        return true;
+                    }
+                    float inwardDistance = onLeft ?
+                            event.getRawX() - handleTouchDownX :
+                            handleTouchDownX - event.getRawX();
+                    if (handleMinimized && inwardDistance >= dp(24)) {
                         v.setPressed(false);
                         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                         revealHandle();
@@ -193,14 +226,14 @@ public final class QuickControlsOverlay {
                     if (!expanded) {
                         scheduleHandleMinimize();
                     }
-                    return false;
+                    return handleDragging;
                 default:
                     return false;
             }
         });
-        FrameLayout.LayoutParams handleParams = new FrameLayout.LayoutParams(
-                dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
-        layer.addView(handle, handleParams);
+        layer.addView(handle, new FrameLayout.LayoutParams(
+                dp(56), dp(88), edgeGravity() | Gravity.CENTER_VERTICAL));
+        layer.post(() -> applyHandleLayout(56, 88));
 
         collapse(false);
     }
@@ -216,6 +249,7 @@ public final class QuickControlsOverlay {
         view.setPadding(dp(16), 0, dp(14), 0);
         view.setMinHeight(dp(64));
         view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
         view.setClickable(true);
         Drawable icon = activity.getDrawable(iconRes);
         if (icon != null) {
@@ -264,7 +298,7 @@ public final class QuickControlsOverlay {
                 .setInterpolator(MOTION_EASING)
                 .start();
         panel.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        panel.setTranslationX(dp(332));
+        panel.setTranslationX(panelHiddenTranslation());
         panel.setVisibility(View.VISIBLE);
         panel.animate()
                 .translationX(0f)
@@ -301,7 +335,7 @@ public final class QuickControlsOverlay {
                     .start();
             panel.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             panel.animate()
-                    .translationX(dp(332))
+                    .translationX(panelHiddenTranslation())
                     .setDuration(PANEL_EXIT_DURATION_MS)
                     .setInterpolator(MOTION_EASING)
                     .withEndAction(() -> {
@@ -367,11 +401,9 @@ public final class QuickControlsOverlay {
         callbacks.setOverlayInputActive(false);
         handle.setContentDescription(activity.getString(R.string.quick_controls_reveal));
         handle.setImageDrawable(null);
-        handle.setBackgroundResource(R.drawable.drift_quick_handle_minimized);
+        handle.setBackgroundResource(minimizedHandleBackground());
         handle.setPadding(0, 0, 0, 0);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                dp(48), dp(72), Gravity.END | Gravity.CENTER_VERTICAL);
-        handle.setLayoutParams(params);
+        applyHandleLayout(48, 72);
         handle.setAlpha(0f);
         handle.setTranslationX(0f);
         handle.setScaleX(1f);
@@ -395,11 +427,9 @@ public final class QuickControlsOverlay {
         handle.setVisibility(View.VISIBLE);
         handle.setImageResource(R.drawable.ic_quick_controls);
         handle.setColorFilter(color(R.color.drift_text));
-        handle.setBackgroundResource(R.drawable.drift_quick_handle);
+        handle.setBackgroundResource(handleBackground());
         handle.setPadding(dp(14), dp(18), dp(14), dp(18));
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                dp(56), dp(88), Gravity.END | Gravity.CENTER_VERTICAL);
-        handle.setLayoutParams(params);
+        applyHandleLayout(56, 88);
         handle.setAlpha(0f);
         handle.setTranslationX(0f);
         handle.setScaleX(1f);
@@ -408,6 +438,51 @@ public final class QuickControlsOverlay {
                 .setDuration(HANDLE_MOTION_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
                 .start();
+    }
+
+    private int edgeGravity() {
+        return onLeft ? Gravity.LEFT : Gravity.RIGHT;
+    }
+
+    private int panelHiddenTranslation() {
+        return onLeft ? -dp(332) : dp(332);
+    }
+
+    private int handleBackground() {
+        return onLeft ? R.drawable.drift_quick_handle_left : R.drawable.drift_quick_handle;
+    }
+
+    private int minimizedHandleBackground() {
+        return onLeft ? R.drawable.drift_quick_handle_minimized_left :
+                R.drawable.drift_quick_handle_minimized;
+    }
+
+    private void applyHandleLayout(int widthDp, int heightDp) {
+        int width = dp(widthDp);
+        int height = dp(heightDp);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                width, height, edgeGravity() | Gravity.TOP);
+        int layerHeight = layer.getHeight();
+        if (layerHeight == 0) {
+            params.gravity = edgeGravity() | Gravity.CENTER_VERTICAL;
+        }
+        else {
+            int center = Math.round(handleCenterFraction * layerHeight);
+            params.topMargin = Math.max(0, Math.min(layerHeight - height, center - height / 2));
+        }
+        handle.setLayoutParams(params);
+    }
+
+    private void moveHandleCenter(float center) {
+        int layerHeight = layer.getHeight();
+        if (layerHeight == 0) {
+            return;
+        }
+        int halfHeight = handle.getHeight() / 2;
+        float clampedCenter = Math.max(halfHeight,
+                Math.min(layerHeight - halfHeight, center));
+        handleCenterFraction = clampedCenter / layerHeight;
+        applyHandleLayout(handleMinimized ? 48 : 56, handleMinimized ? 72 : 88);
     }
 
     private int color(int resource) {

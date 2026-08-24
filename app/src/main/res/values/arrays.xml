@@ -190,4 +190,13 @@
         <item>right</item>
     </string-array>
 
+    <string-array name="quick_controls_sides">
+        <item>@string/align_left</item>
+        <item>@string/align_right</item>
+    </string-array>
+    <string-array name="quick_controls_side_values" translatable="false">
+        <item>left</item>
+        <item>right</item>
+    </string-array>
+
 </resources>

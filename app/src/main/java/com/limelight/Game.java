@@ -722,7 +722,6 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         virtualController.refreshLayout();
         virtualController.show();
     }
-
     private void initkeyBoardLayoutController(){
         keyBoardLayoutController = new KeyBoardLayoutController((FrameLayout)rootView, this, prefConfig);
         keyBoardLayoutController.refreshLayout();
@@ -731,6 +730,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     private void initQuickControls() {
         quickControlsOverlay = new QuickControlsOverlay(this, (FrameLayout) rootView,
+                "left".equals(prefConfig.quickControlsSide),
                 new QuickControlsOverlay.Callbacks() {
                     @Override
                     public void toggleFullKeyboard() {

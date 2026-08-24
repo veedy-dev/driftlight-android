@@ -431,6 +431,15 @@
             android:summary="@string/summary_enable_quick_controls"
             android:title="@string/title_enable_quick_controls"
             app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="right"
+            android:dependency="checkbox_enable_quick_controls"
+            android:entries="@array/quick_controls_sides"
+            android:entryValues="@array/quick_controls_side_values"
+            android:key="list_quick_controls_side"
+            android:summary="@string/summary_quick_controls_side"
+            android:title="@string/title_quick_controls_side"
+            app:iconSpaceReserved="false" />
         <com.limelight.preferences.SeekBarPreference
             android:defaultValue="100"
             android:key="seekbar_keyboard_axi_opacity"
