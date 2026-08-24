@@ -28,7 +28,7 @@
 Driftlight is an Android client for Moonlight-compatible hosts such as Moonshine, Sunshine, and Apollo. It keeps the mature Moonlight streaming stack and adds the desktop controls that are commonly needed around games and launchers.
 
 - Touchscreen, gamepad, mouse, and physical-keyboard input
-- A hidden edge control for Full keys, Alt+Tab, Android keyboard, Task Manager, and session actions
+- A configurable left/right edge drawer with a draggable handle, desktop keyboards, task switching, process-manager shortcut, and session actions
 - A compact full desktop keyboard with Esc, F1–F12, navigation, arrows, Win, Ctrl, and Alt
 - Immersive fullscreen, picture-in-picture, external-display support, and clipboard sync
 - Moonshine control-channel keepalive and resilient audio/video FEC handling
@@ -54,6 +54,12 @@ adb install -r Driftlight-0.1.0.apk
 ```
 
 The release package ID is `com.veedy.driftlight`.
+
+Signing certificate SHA-256:
+
+```text
+66:C8:97:5E:4C:11:BF:9A:99:34:3F:B4:FE:D7:77:E3:C4:7D:1D:69:3F:F8:CF:BE:3B:3F:91:27:3F:8D:CD:E0
+```
 
 ## Compatible hosts
 
