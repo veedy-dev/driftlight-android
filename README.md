@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/veedy-dev/driftlight-android/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/veedy-dev/driftlight-android?style=flat-square"></a>
-  <a href="https://github.com/veedy-dev/driftlight-android/actions/workflows/debug-build.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/veedy-dev/driftlight-android/debug-build.yml?branch=driftlight&style=flat-square"></a>
+  <a href="https://github.com/veedy-dev/driftlight-android/actions/workflows/build.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/veedy-dev/driftlight-android/build.yml?branch=driftlight&style=flat-square"></a>
   <img alt="Android 5.0 and newer" src="https://img.shields.io/badge/Android-5.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white">
   <a href="LICENSE.txt"><img alt="GPL 3.0 license" src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square"></a>
 </p>
@@ -31,7 +31,7 @@ Driftlight is an Android client for Moonlight-compatible hosts such as Moonshine
 - A hidden edge control for Full keys, Alt+Tab, Android keyboard, Task Manager, and session actions
 - A compact full desktop keyboard with Esc, F1–F12, navigation, arrows, Win, Ctrl, and Alt
 - Immersive fullscreen, picture-in-picture, external-display support, and clipboard sync
-- Moonshine control-channel keepalive and safe audio-FEC fallback
+- Moonshine control-channel keepalive and resilient audio/video FEC handling
 
 ## Screenshots
 
@@ -47,13 +47,13 @@ These are direct 1920×1080 captures from an AYN Odin 3. No generated scenes, de
 
 ## Install
 
-Download `Driftlight-1.0.2-release.apk` from the [latest release](https://github.com/veedy-dev/driftlight-android/releases/latest), then open it on Android or install it with ADB:
+Download `Driftlight-0.1.0.apk` from the [latest release](https://github.com/veedy-dev/driftlight-android/releases/latest), then open it on Android or install it with ADB:
 
 ```bash
-adb install -r Driftlight-1.0.2-release.apk
+adb install -r Driftlight-0.1.0.apk
 ```
 
-The release package ID is `com.veedy.driftlight`. Debug builds use `com.veedy.driftlight.debug` and can be installed alongside the release build.
+The release package ID is `com.veedy.driftlight`.
 
 ## Compatible hosts
 

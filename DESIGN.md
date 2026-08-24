@@ -75,7 +75,7 @@ One palette everywhere. Pale mint is the only accent.
 - Use spring-like native motion equivalent to **stiffness 100 / damping 20**; never linear easing.
 - Animate only `transform` and `opacity`. Layout width changes occur discretely before or after the animation.
 - Lists may fade through in a short cascade, but streaming frames and input paths never wait on animation.
-- The quick-control drawer decelerates in from the right edge. Its handle and stripe use short transform-and-opacity transitions; the stripe first reveals the handle rather than opening the drawer directly.
+- The quick-control drawer uses a visible `340ms` decelerating slide in and `280ms` slide out. Opening it transfers controller focus before motion begins; no controller input reaches the stream until the drawer or More menu closes.
 - Active connection progress may loop; stable controls remain still so gameplay is not visually noisy.
 - Respect Android’s Remove animations setting by replacing motion with an immediate state change.
 
