@@ -3,12 +3,8 @@ package com.limelight;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
@@ -138,48 +134,42 @@ public class GameMenu implements Game.GameMenuCallbacks {
     }
 
     private void showMenuDialog(String title, MenuOption[] options) {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(game);
-        builder.setTitle(title);
-
-        final ArrayAdapter<String> actions =
-                new ArrayAdapter<String>(game, android.R.layout.simple_list_item_1);
-
-        builder.setAdapter(actions, (dialog, which) -> {
-            String label = actions.getItem(which);
-            for (MenuOption option : options) {
-                if (!label.equals(option.label)) {
-                    continue;
-                }
-
-                run(option);
-                break;
-            }
-        });
-
         if (currentDialog != null) {
             currentDialog.dismiss();
         }
-        currentDialog = builder.show();
 
-        Window window = currentDialog.getWindow();
-
-        if (window != null) {
-            View decorView = window.getDecorView();
-            decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-
-                    decorView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        for (MenuOption option : options) {
-                            actions.add(option.label);
-                        }
-                        actions.notifyDataSetChanged();
-                    });
-                }
-            });
+        final ArrayAdapter<String> actions =
+                new ArrayAdapter<>(game, android.R.layout.simple_list_item_1);
+        for (MenuOption option : options) {
+            actions.add(option.label);
         }
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(game);
+        builder.setTitle(title);
+        builder.setAdapter(actions, (dialog, which) -> {
+            String label = actions.getItem(which);
+            for (MenuOption option : options) {
+                if (label.equals(option.label)) {
+                    run(option);
+                    break;
+                }
+            }
+        });
+        builder.setOnDismissListener(dialog -> {
+            currentDialog = null;
+            game.setMenuInputActive(false);
+        });
+
+        game.setMenuInputActive(true);
+        currentDialog = builder.create();
+        currentDialog.setOnShowListener(dialog -> {
+            ListView list = currentDialog.getListView();
+            if (list != null && actions.getCount() > 0) {
+                list.setSelection(0);
+                list.requestFocus();
+            }
+        });
+        currentDialog.show();
     }
 
     private void showSpecialKeysMenu() {
@@ -338,6 +328,14 @@ public class GameMenu implements Game.GameMenuCallbacks {
         options.add(new MenuOption(getString(R.string.game_menu_cancel), null));
 
         showMenuDialog(getString(R.string.game_menu_server_cmd), options.toArray(new MenuOption[options.size()]));
+    }
+
+    @Override
+    public void showSessionActions() {
+        showMenuDialog(getString(R.string.quick_session_actions), new MenuOption[]{
+                new MenuOption(getString(R.string.game_menu_disconnect), game::disconnect),
+                new MenuOption(getString(R.string.game_menu_quit_session), game::quit)
+        });
     }
 
     public void showMenu(GameInputDevice device) {

@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -22,11 +22,11 @@ import androidx.core.content.ContextCompat;
 /** Minimal, controller-friendly desktop controls that stay out of the stream when collapsed. */
 public final class QuickControlsOverlay {
     private static final long HANDLE_IDLE_TIMEOUT_MS = 3_000;
-    private static final long HANDLE_MOTION_DURATION_MS = 160;
-    private static final long PANEL_ENTER_DURATION_MS = 200;
-    private static final long PANEL_EXIT_DURATION_MS = 150;
-    private static final DecelerateInterpolator MOTION_EASING =
-            new DecelerateInterpolator(1.5f);
+    private static final long HANDLE_MOTION_DURATION_MS = 180;
+    private static final long PANEL_ENTER_DURATION_MS = 340;
+    private static final long PANEL_EXIT_DURATION_MS = 280;
+    private static final PathInterpolator MOTION_EASING =
+            new PathInterpolator(0.2f, 0f, 0f, 1f);
     public interface Callbacks {
         void toggleFullKeyboard();
         void sendAltTab();
@@ -263,12 +263,14 @@ public final class QuickControlsOverlay {
                 .setDuration(PANEL_ENTER_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
                 .start();
+        panel.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         panel.setTranslationX(dp(332));
         panel.setVisibility(View.VISIBLE);
         panel.animate()
                 .translationX(0f)
                 .setDuration(PANEL_ENTER_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
+                .withEndAction(() -> panel.setLayerType(View.LAYER_TYPE_NONE, null))
                 .start();
         if (actionList.getChildCount() > 0) {
             actionList.getChildAt(0).requestFocus();
@@ -297,11 +299,13 @@ public final class QuickControlsOverlay {
                         }
                     })
                     .start();
+            panel.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             panel.animate()
                     .translationX(dp(332))
                     .setDuration(PANEL_EXIT_DURATION_MS)
                     .setInterpolator(MOTION_EASING)
                     .withEndAction(() -> {
+                        panel.setLayerType(View.LAYER_TYPE_NONE, null);
                         if (!expanded) {
                             panel.setVisibility(View.GONE);
                             panel.setTranslationX(0f);
@@ -315,6 +319,7 @@ public final class QuickControlsOverlay {
                     .start();
         }
         else {
+            panel.setLayerType(View.LAYER_TYPE_NONE, null);
             scrim.setVisibility(View.GONE);
             scrim.setAlpha(1f);
             panel.setVisibility(View.GONE);

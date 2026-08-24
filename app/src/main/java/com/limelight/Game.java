@@ -71,6 +71,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.IBinder;
 import android.os.PersistableBundle;
+import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Rational;
@@ -110,6 +111,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 
@@ -141,6 +143,8 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     private static final int THREE_FINGER_TAP_THRESHOLD = 300;
     private static final int FOUR_FINGER_TAP_THRESHOLD = 300;
     private static final long CONTROL_KEEPALIVE_INTERVAL_MS = 5_000;
+    private static final float MENU_STICK_DEAD_ZONE = 0.55f;
+    private static final long MENU_STICK_REPEAT_MS = 250;
 
     private ControllerHandler controllerHandler;
     private KeyboardTranslator keyboardTranslator;
@@ -191,6 +195,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     private boolean cursorVisible = false;
     private boolean isPanZoomMode = false;
     private boolean synthClickPending = false;
+    private final HashSet<Integer> menuConsumedKeyCodes = new HashSet<>();
+    private boolean menuStickCentered = true;
+    private long lastMenuStickNavigationTime;
     private boolean pointerSwiping = false;
     private boolean waitingForAllModifiersUp = false;
     private int specialKeyCode = KeyEvent.KEYCODE_UNKNOWN;
@@ -271,6 +278,7 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     public interface GameMenuCallbacks {
         void showMenu(GameInputDevice devic);
+        void showSessionActions();
         void hideMenu();
         boolean isMenuOpen();
         void sendAltTab();
@@ -751,26 +759,14 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
                     @Override
                     public void showSessionActions() {
-                        new MaterialAlertDialogBuilder(Game.this)
-                                .setTitle(R.string.quick_session_actions)
-                                .setItems(new CharSequence[]{
-                                        getString(R.string.game_menu_disconnect),
-                                        getString(R.string.game_menu_quit_session)
-                                }, (dialog, which) -> {
-                                    dialog.dismiss();
-                                    if (which == 0) {
-                                        disconnect();
-                                    }
-                                    else {
-                                        quit();
-                                    }
-                                })
-                                .show();
+                        gameMenuCallbacks.showSessionActions();
                     }
 
                     @Override
                     public void setOverlayInputActive(boolean active) {
-                        setInputGrabState(!active);
+                        if (active || gameMenuCallbacks == null || !gameMenuCallbacks.isMenuOpen()) {
+                            setMenuInputActive(active);
+                        }
                     }
 
                     @Override
@@ -1509,6 +1505,15 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         finish();
     }
 
+    void setMenuInputActive(boolean active) {
+        menuStickCentered = true;
+        setInputGrabState(!active);
+        if (!active && streamView != null) {
+            streamView.requestFocus();
+            hideSystemUi(100);
+        }
+    }
+
     private void setInputGrabState(boolean grab) {
         // Grab/ungrab the mouse cursor
         if (grab) {
@@ -1669,6 +1674,137 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         return (byte) modifierFlags;
     }
 
+    private boolean isControllerMenuActive() {
+        return (quickControlsOverlay != null && quickControlsOverlay.isExpanded()) ||
+                (gameMenuCallbacks != null && gameMenuCallbacks.isMenuOpen());
+    }
+
+    private void sendKeyToFocusedMenuView(int keyCode) {
+        View focused = getCurrentFocus();
+        if (focused == null) {
+            return;
+        }
+        long now = SystemClock.uptimeMillis();
+        focused.dispatchKeyEvent(new KeyEvent(now, now, KeyEvent.ACTION_DOWN, keyCode, 0));
+        focused.dispatchKeyEvent(new KeyEvent(now, now, KeyEvent.ACTION_UP, keyCode, 0));
+    }
+
+    private void moveQuickControlsFocus(int direction) {
+        View focused = getCurrentFocus();
+        if (focused == null) {
+            return;
+        }
+        View next = focused.focusSearch(direction);
+        if (next != null) {
+            next.requestFocus();
+        }
+    }
+
+    private void navigateControllerMenu(int keyCode, int direction) {
+        if (gameMenuCallbacks != null && gameMenuCallbacks.isMenuOpen()) {
+            sendKeyToFocusedMenuView(keyCode);
+        }
+        else {
+            moveQuickControlsFocus(direction);
+        }
+    }
+
+    private boolean handleControllerMenuKey(KeyEvent event, boolean down) {
+        int keyCode = event.getKeyCode();
+        if (!down && menuConsumedKeyCodes.remove(keyCode)) {
+            return true;
+        }
+        if (!isControllerMenuActive() ||
+                !ControllerHandler.isGameControllerDevice(event.getDevice())) {
+            return false;
+        }
+
+        if (!down) {
+            return true;
+        }
+        menuConsumedKeyCodes.add(keyCode);
+        if (event.getRepeatCount() > 0) {
+            return true;
+        }
+
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BUTTON_A:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_ENTER:
+                View focused = getCurrentFocus();
+                if (focused != null && !focused.performClick()) {
+                    sendKeyToFocusedMenuView(KeyEvent.KEYCODE_DPAD_CENTER);
+                }
+                break;
+            case KeyEvent.KEYCODE_BUTTON_B:
+            case KeyEvent.KEYCODE_BACK:
+                if (quickControlsOverlay != null && quickControlsOverlay.isExpanded()) {
+                    quickControlsOverlay.collapse();
+                }
+                else {
+                    hideGameMenu();
+                }
+                break;
+            case KeyEvent.KEYCODE_DPAD_UP:
+                navigateControllerMenu(KeyEvent.KEYCODE_DPAD_UP, View.FOCUS_UP);
+                break;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                navigateControllerMenu(KeyEvent.KEYCODE_DPAD_DOWN, View.FOCUS_DOWN);
+                break;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                navigateControllerMenu(KeyEvent.KEYCODE_DPAD_LEFT, View.FOCUS_LEFT);
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                navigateControllerMenu(KeyEvent.KEYCODE_DPAD_RIGHT, View.FOCUS_RIGHT);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    private boolean handleControllerMenuMotion(MotionEvent event) {
+        if (!isControllerMenuActive() ||
+                (event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == 0) {
+            return false;
+        }
+
+        float x = event.getAxisValue(MotionEvent.AXIS_HAT_X);
+        float y = event.getAxisValue(MotionEvent.AXIS_HAT_Y);
+        if (Math.abs(x) < MENU_STICK_DEAD_ZONE) {
+            x = event.getAxisValue(MotionEvent.AXIS_X);
+        }
+        if (Math.abs(y) < MENU_STICK_DEAD_ZONE) {
+            y = event.getAxisValue(MotionEvent.AXIS_Y);
+        }
+
+        if (Math.abs(x) < MENU_STICK_DEAD_ZONE && Math.abs(y) < MENU_STICK_DEAD_ZONE) {
+            menuStickCentered = true;
+            return true;
+        }
+
+        long now = event.getEventTime();
+        if (!menuStickCentered && now - lastMenuStickNavigationTime < MENU_STICK_REPEAT_MS) {
+            return true;
+        }
+        menuStickCentered = false;
+        lastMenuStickNavigationTime = now;
+
+        int keyCode;
+        int direction;
+        if (Math.abs(x) > Math.abs(y)) {
+            keyCode = x > 0 ? KeyEvent.KEYCODE_DPAD_RIGHT : KeyEvent.KEYCODE_DPAD_LEFT;
+            direction = x > 0 ? View.FOCUS_RIGHT : View.FOCUS_LEFT;
+        }
+        else {
+            keyCode = y > 0 ? KeyEvent.KEYCODE_DPAD_DOWN : KeyEvent.KEYCODE_DPAD_UP;
+            direction = y > 0 ? View.FOCUS_DOWN : View.FOCUS_UP;
+        }
+
+        navigateControllerMenu(keyCode, direction);
+        return true;
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return handleKeyDown(event) || super.onKeyDown(keyCode, event);
@@ -1676,6 +1812,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     @Override
     public boolean handleKeyDown(KeyEvent event) {
+        if (handleControllerMenuKey(event, true)) {
+            return true;
+        }
         // Pass-through virtual navigation keys
         if ((event.getFlags() & KeyEvent.FLAG_VIRTUAL_HARD_KEY) != 0) {
             return false;
@@ -1767,6 +1906,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
 
     @Override
     public boolean handleKeyUp(KeyEvent event) {
+        if (handleControllerMenuKey(event, false)) {
+            return true;
+        }
         // Pass-through virtual navigation keys
         if ((event.getFlags() & KeyEvent.FLAG_VIRTUAL_HARD_KEY) != 0) {
             return false;
@@ -2375,6 +2517,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
     // Returns true if the event was consumed
     // NB: View is only present if called from a view callback
     private boolean handleMotionEvent(View view, MotionEvent event) {
+        if (handleControllerMenuMotion(event)) {
+            return true;
+        }
 
         // Pass through mouse/touch/joystick input if we're not grabbing
         if (!grabbedInput) {
