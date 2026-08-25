@@ -7,7 +7,7 @@
 - **Density:** 4/10 — Daily App Balanced. Enough room for controller focus and touch, without empty showcase-space inside operational screens.
 - **Variance:** 7/10 — Offset Asymmetric. Titles, controls, and product imagery occupy distinct zones rather than centering everything.
 - **Motion:** 5/10 — Fluid Native. Motion confirms state and then gets out of the stream.
-- **Identity:** The authored **Signal Relay** mark: one packet node moving through a forward gate. Flat geometry, two colors, no letterform, no mascot, and no effects.
+- **Identity:** The hand-authored **Driftwave** mark fuses a simplified controller body with three streaming arcs, revealing a `D` through negative space. Warm White geometry sits on a restrained turquoise-to-blue launcher gradient; no generated artwork or effects.
 - **Material:** Near-black mineral surfaces, low tonal elevation, thin structural rules, and one pale-mint focus signal.
 
 The stream is always the primary surface. Client chrome stays compact until requested. README and project imagery use direct real-device captures and ordinary Markdown — never synthetic marketing boards, fake device frames, or generated concept art.
@@ -84,11 +84,11 @@ One palette everywhere. Pale mint is the only accent.
 **NEVER DO:**
 
 - No AI-generated mascot scenes, glossy concept wallpaper, or fake product screenshots.
-- No animals or creature mascots for Driftlight. Use the authored Signal Relay mark.
+- No animals or creature mascots for Driftlight. Use the authored Driftwave mark.
 - No emojis.
 - No Inter.
 - No pure black (`#000000`).
-- No purple/blue neon treatment, outer glows, or oversaturated gradients.
+- No purple neon, outer glows, or oversaturated gradients. The launcher tile alone may use the restrained `#35D8C0` to `#1769FF` Driftwave gradient.
 - No glassmorphism as decoration.
 - No gradient text.
 - No overlapping text and imagery.
@@ -97,5 +97,5 @@ One palette everywhere. Pale mint is the only accent.
 - No generic placeholder names or fake round metrics.
 - No custom cursor.
 - No copy such as “Elevate”, “Seamless”, “Unleash”, “Next-Gen”, “Scroll to explore”, or “Swipe down”.
-- No text-heavy app icon; the Signal Relay silhouette must work at `48px`.
+- No text-heavy app icon; the Driftwave silhouette must work at `48px`.
 - No navigation or control surface that covers Android system bars without either insetting or intentionally entering immersive fullscreen.

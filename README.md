@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="store-assets/driftlight-icon.svg" width="96" alt="Driftlight Signal Relay icon">
+  <img src="store-assets/driftlight-icon.svg" width="96" alt="Driftlight Driftwave icon">
 </p>
 
 <h1 align="center">Driftlight</h1>
