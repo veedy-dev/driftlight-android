@@ -5,7 +5,7 @@
 <h1 align="center">Driftlight</h1>
 
 <p align="center">
-  Moonlight Android, reworked for touchscreens and handhelds.
+  Moonlight-based Android streaming with built-in desktop controls.
 </p>
 
 <p align="center">
@@ -25,17 +25,18 @@
 
 ## About
 
-Driftlight is based on [Moonlight Android](https://github.com/moonlight-stream/moonlight-android). It keeps Moonlight's streaming code and updates the Android app around it. The aim is simple. Make the client easier to use on current Android devices without giving up Moonlight compatibility.
+Driftlight is a Moonlight Android fork with a new interface, quick controls, and desktop keyboard support.
 
-## What Driftlight changes
+## Features
 
-- New host library and settings screens
-- An in-stream quick controls drawer for keyboards, task switching, process controls, and session actions
-- Left or right drawer placement with a vertically movable handle
-- A full desktop keyboard with Esc, F1 through F12, navigation keys, arrows, Win, Ctrl, and Alt
-- Controller navigation that stays in an open menu instead of sending button presses to the remote PC
-- Control-channel keepalive for Moonshine and fixes for audio and video FEC crashes
-- Immersive fullscreen, picture-in-picture, external displays, and clipboard sync
+- Updated host library and settings
+- Quick controls inside the stream
+- Full desktop and Android keyboards
+- Touch, mouse, keyboard, and gamepad input
+- Left or right quick-controls handle
+- Controller navigation in menus
+- Moonshine and Apollo support
+- Control-channel and FEC crash fixes
 
 ## Screenshots
 
@@ -49,29 +50,21 @@ Driftlight is based on [Moonlight Android](https://github.com/moonlight-stream/m
 
 ## Install
 
-Download `Driftlight-0.1.0.apk` from the [latest release](https://github.com/veedy-dev/driftlight-android/releases/latest), then open it on Android or install it with ADB.
+Download the APK from the [latest release](https://github.com/veedy-dev/driftlight-android/releases/latest) and open it on your Android device.
 
-```bash
-adb install -r Driftlight-0.1.0.apk
-```
+If Android blocks the installation, allow your browser or file manager to install unknown apps, then try again.
 
-The release package ID is `com.veedy.driftlight`.
+## Streaming servers
 
-Signing certificate SHA-256:
+Install one of these on your computer:
 
-```text
-66:C8:97:5E:4C:11:BF:9A:99:34:3F:B4:FE:D7:77:E3:C4:7D:1D:69:3F:F8:CF:BE:3B:3F:91:27:3F:8D:CD:E0
-```
+- [Apollo](https://github.com/ClassicOldSong/Apollo)
+- [Sunshine](https://github.com/LizardByte/Sunshine)
+- [Moonshine for Linux](https://github.com/hgaiser/moonshine)
 
-## Host software
+Open Driftlight and add the computer running the server.
 
-For Linux, [Moonshine](https://github.com/hgaiser/moonshine) is our first recommendation. It runs streams in isolated compositor sessions and can work without a physical monitor.
-
-[Apollo](https://github.com/ClassicOldSong/Apollo) is a good choice when you want a Sunshine-based host with virtual-display management.
-
-[Sunshine](https://github.com/LizardByte/Sunshine) and other Moonlight-compatible GameStream hosts also work.
-
-## Build
+## Build from source
 
 You need JDK 17, Android SDK 35, and Android NDK `27.0.12077973`.
 
