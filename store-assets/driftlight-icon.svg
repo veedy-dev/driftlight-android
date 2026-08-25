@@ -2,8 +2,7 @@
   <defs>
     <linearGradient id="bg" x1="56" y1="42" x2="462" y2="478" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#35D8C0"/>
-      <stop offset="0.68" stop-color="#1FC7C6"/>
-      <stop offset="0.86" stop-color="#189BD8"/>
+      <stop offset="0.5" stop-color="#16AAD5"/>
       <stop offset="1" stop-color="#1769FF"/>
     </linearGradient>
     <mask id="controls">
