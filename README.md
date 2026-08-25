@@ -18,7 +18,7 @@
 <p align="center">
   <a href="https://github.com/veedy-dev/driftlight-android/releases/latest"><strong>Download the APK</strong></a>
   ·
-  <a href="#build">Build from source</a>
+  <a href="#build-from-source">Build from source</a>
   ·
   <a href="https://github.com/veedy-dev/driftlight-android/issues">Report an issue</a>
 </p>
