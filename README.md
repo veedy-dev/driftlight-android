@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="store-assets/driftlight-icon.svg" width="96" alt="Driftlight Driftwave icon">
+  <img src="store-assets/driftlight-icon.svg" width="96" alt="Driftlight icon">
 </p>
 
 <h1 align="center">Driftlight</h1>
 
 <p align="center">
-  Moonlight-compatible streaming for Android, with touch, controller, mouse, keyboard, and desktop controls built into the stream.
+  Moonlight Android, reworked for touchscreens and handhelds.
 </p>
 
 <p align="center">
@@ -23,28 +23,33 @@
   <a href="https://github.com/veedy-dev/driftlight-android/issues">Report an issue</a>
 </p>
 
-## Stream first. Controls on demand.
+## About
 
-Driftlight keeps the game in view and puts the awkward desktop moments one gesture away. Move naturally between touch, gamepad, mouse, and keyboard without leaving the stream.
+Driftlight is based on [Moonlight Android](https://github.com/moonlight-stream/moonlight-android). It keeps Moonlight's streaming code and updates the Android app around it. The aim is simple. Make the client easier to use on current Android devices without giving up Moonlight compatibility.
 
-- A configurable edge drawer for keyboards, task switching, process controls, and session actions
-- A compact desktop keyboard with Esc, F1–F12, navigation, arrows, Win, Ctrl, and Alt
-- Immersive fullscreen, picture-in-picture, external-display support, and clipboard sync
-- Moonshine control-channel keepalive and resilient audio/video FEC handling
+## What Driftlight changes
 
-## In action
+- New host library and settings screens
+- An in-stream quick controls drawer for keyboards, task switching, process controls, and session actions
+- Left or right drawer placement with a vertically movable handle
+- A full desktop keyboard with Esc, F1 through F12, navigation keys, arrows, Win, Ctrl, and Alt
+- Controller navigation that stays in an open menu instead of sending button presses to the remote PC
+- Control-channel keepalive for Moonshine and fixes for audio and video FEC crashes
+- Immersive fullscreen, picture-in-picture, external displays, and clipboard sync
 
-| Pick a host and launch | Pull in controls only when needed |
+## Screenshots
+
+| Host selection | Quick controls |
 | --- | --- |
-| <img src="docs/screenshots/host-library.png" alt="Driftlight host library"> | <img src="docs/screenshots/quick-controls.png" alt="Quick controls over a live stream"> |
+| <img src="docs/screenshots/host-library.png" alt="Driftlight host selection"> | <img src="docs/screenshots/quick-controls.png" alt="Quick controls over a live stream"> |
 
-### A full desktop keyboard, without leaving the stream
-
-<img src="docs/screenshots/full-keyboard.png" alt="Full desktop keyboard over a live stream">
+| Settings | Full desktop keyboard |
+| --- | --- |
+| <img src="docs/screenshots/settings.png" alt="Driftlight settings"> | <img src="docs/screenshots/full-keyboard.png" alt="Full desktop keyboard over a live stream"> |
 
 ## Install
 
-Download `Driftlight-0.1.0.apk` from the [latest release](https://github.com/veedy-dev/driftlight-android/releases/latest), then open it on Android or install it with ADB:
+Download `Driftlight-0.1.0.apk` from the [latest release](https://github.com/veedy-dev/driftlight-android/releases/latest), then open it on Android or install it with ADB.
 
 ```bash
 adb install -r Driftlight-0.1.0.apk
@@ -58,16 +63,17 @@ Signing certificate SHA-256:
 66:C8:97:5E:4C:11:BF:9A:99:34:3F:B4:FE:D7:77:E3:C4:7D:1D:69:3F:F8:CF:BE:3B:3F:91:27:3F:8D:CD:E0
 ```
 
-## Compatible hosts
+## Host software
 
-- [Moonshine](https://github.com/hgaiser/moonshine)
-- [Sunshine](https://github.com/LizardByte/Sunshine)
-- [Apollo](https://github.com/ClassicOldSong/Apollo)
-- Other Moonlight-compatible GameStream hosts
+For Linux, [Moonshine](https://github.com/hgaiser/moonshine) is our first recommendation. It runs streams in isolated compositor sessions and can work without a physical monitor.
+
+[Apollo](https://github.com/ClassicOldSong/Apollo) is a good choice when you want a Sunshine-based host with virtual-display management.
+
+[Sunshine](https://github.com/LizardByte/Sunshine) and other Moonlight-compatible GameStream hosts also work.
 
 ## Build
 
-Requirements: JDK 17, Android SDK 35, and Android NDK `27.0.12077973`.
+You need JDK 17, Android SDK 35, and Android NDK `27.0.12077973`.
 
 ```bash
 git clone --recurse-submodules https://github.com/veedy-dev/driftlight-android.git
@@ -75,22 +81,22 @@ cd driftlight-android
 ./gradlew assembleNonRoot_gameRelease
 ```
 
-The unsigned release APK is written to:
+Gradle writes the unsigned release APK here:
 
 ```text
 app/build/outputs/apk/nonRoot_game/release/app-nonRoot_game-release-unsigned.apk
 ```
 
-For a side-by-side development build:
+For a development build that can sit beside the release app:
 
 ```bash
 ./gradlew assembleNonRoot_gameDebug
 ```
 
-> The Android NDK cannot build from a path containing spaces. Use a space-free checkout or the included GitHub Actions workflow.
+The Android NDK cannot build from a path containing spaces. Use a space-free checkout or the GitHub Actions workflow.
 
-## Lineage and license
+## Origin and license
 
-Driftlight is based on [Moonlight Android](https://github.com/moonlight-stream/moonlight-android) and [Artemis / Moonlight Noir](https://github.com/ClassicOldSong/moonlight-android). Existing upstream copyright notices and GPL-3.0 terms remain in force.
+Driftlight is based on Moonlight Android and [Artemis / Moonlight Noir](https://github.com/ClassicOldSong/moonlight-android). The upstream copyright notices and GPL-3.0 terms remain in place.
 
-Driftlight is distributed under [GPL-3.0](LICENSE.txt). Bundled typefaces are licensed under the SIL Open Font License in [`store-assets/fonts`](store-assets/fonts).
+Driftlight uses [GPL-3.0](LICENSE.txt). The bundled fonts use the SIL Open Font License in [`store-assets/fonts`](store-assets/fonts).
