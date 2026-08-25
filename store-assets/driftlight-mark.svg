@@ -2,14 +2,16 @@
   <defs>
     <mask id="controller-cutouts">
       <rect width="512" height="512" fill="white"/>
-      <circle cx="176" cy="216" r="23" fill="black"/>
-      <circle cx="176" cy="300" r="23" fill="black"/>
+      <path d="M163 207H185V225H203V247H185V265H163V247H145V225H163Z" fill="black"/>
     </mask>
   </defs>
-  <g fill="none" stroke="#F2F4EF" stroke-width="28" stroke-linecap="round">
-    <path d="M256 211 A45 45 0 0 1 256 301"/>
-    <path d="M256 171 A85 85 0 0 1 256 341"/>
-    <path d="M256 131 A125 125 0 0 1 256 381"/>
+  <g transform="translate(40.96 40.96) scale(0.84)">
+  <circle cx="274" cy="256" r="14" fill="#F2F4EF"/>
+  <g fill="none" stroke="#F2F4EF" stroke-width="22" stroke-linecap="round">
+    <path d="M297 223 A40 40 0 0 1 297 289"/>
+    <path d="M316 195 A74 74 0 0 1 316 317"/>
+    <path d="M336 168 A108 108 0 0 1 336 344"/>
   </g>
-  <path d="M152 126 C116 126 92 152 92 184 C92 208 108 226 134 232 L134 280 C108 286 92 304 92 328 C92 360 116 386 152 386 L228 376 C246 374 256 360 256 342 L256 170 C256 152 246 138 228 136 Z" fill="#F2F4EF" mask="url(#controller-cutouts)"/>
+  <path d="M165 120 H225 C244 120 258 135 258 154 V358 C258 377 244 392 225 392 H165 C140 392 120 373 120 348 V164 C120 139 140 120 165 120 Z" fill="#F2F4EF" mask="url(#controller-cutouts)"/>
+  </g>
 </svg>

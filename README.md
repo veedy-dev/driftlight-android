@@ -23,27 +23,24 @@
   <a href="https://github.com/veedy-dev/driftlight-android/issues">Report an issue</a>
 </p>
 
-## What it is
+## Stream first. Controls on demand.
 
-Driftlight is an Android client for Moonlight-compatible hosts such as Moonshine, Sunshine, and Apollo. It keeps the mature Moonlight streaming stack and adds the desktop controls that are commonly needed around games and launchers.
+Driftlight keeps the game in view and puts the awkward desktop moments one gesture away. Move naturally between touch, gamepad, mouse, and keyboard without leaving the stream.
 
-- Touchscreen, gamepad, mouse, and physical-keyboard input
-- A configurable left/right edge drawer with a draggable handle, desktop keyboards, task switching, process-manager shortcut, and session actions
-- A compact full desktop keyboard with Esc, F1–F12, navigation, arrows, Win, Ctrl, and Alt
+- A configurable edge drawer for keyboards, task switching, process controls, and session actions
+- A compact desktop keyboard with Esc, F1–F12, navigation, arrows, Win, Ctrl, and Alt
 - Immersive fullscreen, picture-in-picture, external-display support, and clipboard sync
 - Moonshine control-channel keepalive and resilient audio/video FEC handling
 
-## Screenshots
+## In action
 
-These are direct 1920×1080 captures from an AYN Odin 3. No generated scenes, device frames, or reconstructed UI.
-
-| Host library | Quick controls |
+| Pick a host and launch | Pull in controls only when needed |
 | --- | --- |
-| <img src="docs/screenshots/host-library.png" alt="Driftlight host library on an AYN Odin 3"> | <img src="docs/screenshots/quick-controls.png" alt="Quick controls over a live Moonshine stream"> |
+| <img src="docs/screenshots/host-library.png" alt="Driftlight host library"> | <img src="docs/screenshots/quick-controls.png" alt="Quick controls over a live stream"> |
 
-### Full desktop keyboard
+### A full desktop keyboard, without leaving the stream
 
-<img src="docs/screenshots/full-keyboard.png" alt="Full desktop keyboard over a live Moonshine stream">
+<img src="docs/screenshots/full-keyboard.png" alt="Full desktop keyboard over a live stream">
 
 ## Install
 

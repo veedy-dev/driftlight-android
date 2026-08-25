@@ -3,26 +3,35 @@
     android:height="108dp"
     android:viewportWidth="512"
     android:viewportHeight="512">
+    <group
+        android:pivotX="256"
+        android:pivotY="256"
+        android:scaleX="0.84"
+        android:scaleY="0.84">
     <path
         android:fillColor="#FFFFFFFF"
         android:fillType="evenOdd"
-        android:pathData="M152,126 C116,126 92,152 92,184 C92,208 108,226 134,232 L134,280 C108,286 92,304 92,328 C92,360 116,386 152,386 L228,376 C246,374 256,360 256,342 L256,170 C256,152 246,138 228,136 Z M176,193 A23,23 0,1 1,176,239 A23,23 0,1 1,176,193 M176,277 A23,23 0,1 1,176,323 A23,23 0,1 1,176,277" />
+        android:pathData="M165,120 H225 C244,120 258,135 258,154 V358 C258,377 244,392 225,392 H165 C140,392 120,373 120,348 V164 C120,139 140,120 165,120 Z M145,225 H163 V207 H185 V225 H203 V247 H185 V265 H163 V247 H145 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M274,242 A14,14 0,1 1,274,270 A14,14 0,1 1,274,242" />
     <path
         android:fillColor="@android:color/transparent"
-        android:pathData="M256,211 A45,45 0,0 1,256,301"
+        android:pathData="M297,223 A40,40 0,0 1,297,289"
         android:strokeColor="#FFFFFFFF"
         android:strokeLineCap="round"
-        android:strokeWidth="28" />
+        android:strokeWidth="22" />
     <path
         android:fillColor="@android:color/transparent"
-        android:pathData="M256,171 A85,85 0,0 1,256,341"
+        android:pathData="M316,195 A74,74 0,0 1,316,317"
         android:strokeColor="#FFFFFFFF"
         android:strokeLineCap="round"
-        android:strokeWidth="28" />
+        android:strokeWidth="22" />
     <path
         android:fillColor="@android:color/transparent"
-        android:pathData="M256,131 A125,125 0,0 1,256,381"
+        android:pathData="M336,168 A108,108 0,0 1,336,344"
         android:strokeColor="#FFFFFFFF"
         android:strokeLineCap="round"
-        android:strokeWidth="28" />
+        android:strokeWidth="22" />
+    </group>
 </vector>
