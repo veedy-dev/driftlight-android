@@ -36,7 +36,6 @@ public final class QuickControlsOverlay {
         void showMore();
         void showSessionActions();
         void setOverlayInputActive(boolean active);
-        void restoreStreamFocus();
     }
 
     private final Activity activity;
@@ -304,11 +303,13 @@ public final class QuickControlsOverlay {
                 .translationX(0f)
                 .setDuration(PANEL_ENTER_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
-                .withEndAction(() -> panel.setLayerType(View.LAYER_TYPE_NONE, null))
+                .withEndAction(() -> {
+                    panel.setLayerType(View.LAYER_TYPE_NONE, null);
+                    if (expanded && actionList.getChildCount() > 0) {
+                        actionList.getChildAt(0).requestFocus();
+                    }
+                })
                 .start();
-        if (actionList.getChildCount() > 0) {
-            actionList.getChildAt(0).requestFocus();
-        }
     }
 
     public void collapse() {
@@ -346,7 +347,7 @@ public final class QuickControlsOverlay {
                             showFullHandle();
                             scheduleHandleMinimize();
                             if (restoreFocus) {
-                                callbacks.restoreStreamFocus();
+                                callbacks.setOverlayInputActive(false);
                             }
                         }
                     })
@@ -361,7 +362,7 @@ public final class QuickControlsOverlay {
             showFullHandle();
             scheduleHandleMinimize();
             if (restoreFocus) {
-                callbacks.restoreStreamFocus();
+                callbacks.setOverlayInputActive(false);
             }
         }
     }

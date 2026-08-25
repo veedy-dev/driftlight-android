@@ -768,12 +768,6 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                             setMenuInputActive(active);
                         }
                     }
-
-                    @Override
-                    public void restoreStreamFocus() {
-                        streamView.requestFocus();
-                        hideSystemUi(100);
-                    }
                 });
     }
 
