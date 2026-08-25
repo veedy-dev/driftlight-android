@@ -5,7 +5,7 @@
 <h1 align="center">Driftlight</h1>
 
 <p align="center">
-  Moonlight-based Android streaming with built-in desktop controls.
+  A Moonlight Android fork with quick controls and a redesigned UI.
 </p>
 
 <p align="center">
