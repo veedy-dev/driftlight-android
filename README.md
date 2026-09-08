@@ -33,7 +33,7 @@ Driftlight is a Moonlight Android fork with a new interface, quick controls, and
 - Quick controls inside the stream
 - Full desktop and Android keyboards
 - Touch, mouse, keyboard, and gamepad input
-- Left or right quick-controls handle
+- Left or right quick-controls handle that fades away when idle; touch its edge position to reveal it
 - Controller navigation in menus
 - Moonshine and Apollo support
 - Control-channel and FEC crash fixes

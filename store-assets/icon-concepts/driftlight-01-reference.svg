@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1254" height="1254" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Driftlight — D1 reference</title>
+  <desc id="desc">White streaming D with three circular endpoints and a rounded gamepad plus, on a blue, cyan and mint background. Hand-drawn vector recreation of D1.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0.2"><stop stop-color="#58ADFC"/><stop offset="0.48" stop-color="#5ACBF0"/><stop offset="1" stop-color="#8AF9DA"/></linearGradient>
+    <linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#C6FAFF" stop-opacity="0.12"/><stop offset="0.45" stop-color="#C6FAFF" stop-opacity="0"/><stop offset="1" stop-color="#C6FFF0" stop-opacity="0.43"/></linearGradient>
+    <linearGradient id="body" x1="357" y1="0" x2="720" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity="0.36"/><stop offset="0.8" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
+    <linearGradient id="trail" x1="286" y1="0" x2="675" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity="0.65"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+    <linearGradient id="fold" x1="340" y1="430" x2="605" y2="720" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity="0.3"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect x="6" y="5" width="500" height="502" rx="114" fill="url(#bg)"/>
+  <rect x="6" y="5" width="500" height="502" rx="114" fill="url(#light)"/>
+  <g transform="scale(0.4082934609)">
+    <path d="M407 430 L585 532 H673 L468 406 Z M286 665 L480 755 H671 L356 609 Z" fill="url(#fold)"/>
+    <path d="M407 309 H708 C876 309 1012 446 1012 615 C1012 784 876 922 708 922 H357 V794 H708 C809 794 889 715 889 615 C889 516 809 436 708 436 H407 Z" fill="url(#body)"/>
+    <path d="M286 532 H679 V665 H286 Z" fill="url(#trail)"/>
+    <g fill="#FFFFFF">
+      <circle cx="407.5" cy="373" r="57.5"/>
+      <circle cx="286" cy="598.5" r="66.5"/>
+      <circle cx="357" cy="839" r="84"/>
+      <path d="M711 516 H725 C743 516 756 529 756 547 V572 Q756 578 762 578 H787 C805 578 818 591 818 609 V623 C818 641 805 654 787 654 H762 Q756 654 756 660 V685 C756 703 743 716 725 716 H711 C693 716 680 703 680 685 V660 Q680 654 674 654 H649 C631 654 618 641 618 623 V609 C618 591 631 578 649 578 H674 Q680 578 680 572 V547 C680 529 693 516 711 516 Z"/>
+    </g>
+  </g>
+</svg>

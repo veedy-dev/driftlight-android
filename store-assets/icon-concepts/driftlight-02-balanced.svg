@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1254" height="1254" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Driftlight — Balanced</title>
+  <desc id="desc">A geometric white D with three equal streaming nodes and a rounded plus. Blue to cyan to mint background.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0.2"><stop stop-color="#58ADFC"/><stop offset="0.48" stop-color="#5ACBF0"/><stop offset="1" stop-color="#8AF9DA"/></linearGradient>
+    <linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#C6FAFF" stop-opacity="0.12"/><stop offset="0.45" stop-color="#C6FAFF" stop-opacity="0"/><stop offset="1" stop-color="#C6FFF0" stop-opacity="0.43"/></linearGradient>
+    <linearGradient id="d" x1="144" y1="0" x2="292" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity="0.32"/><stop offset="0.85" stop-color="white"/><stop offset="1" stop-color="white"/></linearGradient>
+    <linearGradient id="stream" x1="116" y1="0" x2="267" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity="0.67"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
+    <linearGradient id="fold" x1="142" y1="178" x2="249" y2="302" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity="0.23"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect x="6" y="5" width="500" height="502" rx="114" fill="url(#bg)"/>
+  <rect x="6" y="5" width="500" height="502" rx="114" fill="url(#light)"/>
+  <path d="M160 180 L246 232 H267 L179 157 Z M116 280 L208 332 H267 L143 256 Z" fill="url(#fold)"/>
+  <path d="M160 156 H282 A100 100 0 0 1 282 356 H144" fill="none" stroke="url(#d)" stroke-width="48"/>
+  <path d="M116 232 H268 V280 H116 Z" fill="url(#stream)"/>
+  <g fill="white">
+    <circle cx="160" cy="156" r="24"/>
+    <circle cx="116" cy="256" r="24"/>
+    <circle cx="144" cy="356" r="24"/>
+    <path d="M285 217 H297 Q308 217 308 228 V239 Q308 242 311 242 H322 Q333 242 333 253 V265 Q333 276 322 276 H311 Q308 276 308 279 V290 Q308 301 297 301 H285 Q274 301 274 290 V279 Q274 276 271 276 H260 Q249 276 249 265 V253 Q249 242 260 242 H271 Q274 242 274 239 V228 Q274 217 285 217 Z"/>
+  </g>
+</svg>

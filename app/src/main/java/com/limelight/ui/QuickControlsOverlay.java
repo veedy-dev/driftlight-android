@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewConfiguration;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -49,6 +50,7 @@ public final class QuickControlsOverlay {
     private final int touchSlop;
     private final Runnable minimizeHandleRunnable = this::minimizeHandle;
     private boolean handleMinimized;
+    private boolean handleHidden;
     private boolean expanded;
     private boolean expandedBeforePip;
     private float handleTouchDownX;
@@ -56,6 +58,8 @@ public final class QuickControlsOverlay {
     private float handleTouchDownCenterY;
     private float handleCenterFraction = 0.5f;
     private boolean handleDragging;
+    private boolean handleSwiping;
+    private boolean handleTouching;
 
     public QuickControlsOverlay(Activity activity, ViewGroup root, boolean onLeft, Callbacks callbacks) {
         this.activity = activity;
@@ -165,6 +169,21 @@ public final class QuickControlsOverlay {
         handle.setScaleType(ImageButton.ScaleType.FIT_CENTER);
         handle.setFocusable(true);
         handle.setClickable(true);
+        handle.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public void sendAccessibilityEvent(View host, int eventType) {
+                if (eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                    handle.removeCallbacks(minimizeHandleRunnable);
+                    if (handleMinimized) {
+                        showFullHandle();
+                    }
+                }
+                else if (eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED) {
+                    scheduleHandleMinimize();
+                }
+                super.sendAccessibilityEvent(host, eventType);
+            }
+        });
         handle.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 handle.removeCallbacks(minimizeHandleRunnable);
@@ -178,7 +197,17 @@ public final class QuickControlsOverlay {
         });
         handle.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            if (handleMinimized) {
+            if (handleHidden) {
+                handleHidden = false;
+                handle.animate().cancel();
+                handle.animate()
+                        .alpha(0.62f)
+                        .setDuration(HANDLE_MOTION_DURATION_MS)
+                        .setInterpolator(MOTION_EASING)
+                        .start();
+                scheduleHandleMinimize();
+            }
+            else if (handleMinimized) {
                 revealHandle();
             }
             else {
@@ -192,11 +221,19 @@ public final class QuickControlsOverlay {
                     handleTouchDownY = event.getRawY();
                     handleTouchDownCenterY = handle.getY() + handle.getHeight() / 2f;
                     handleDragging = false;
+                    handleSwiping = false;
+                    handleTouching = true;
                     handle.removeCallbacks(minimizeHandleRunnable);
                     return false;
                 case MotionEvent.ACTION_MOVE:
-                    if (!handleMinimized && !expanded &&
-                            Math.abs(event.getRawY() - handleTouchDownY) > touchSlop) {
+                    float distanceX = Math.abs(event.getRawX() - handleTouchDownX);
+                    float distanceY = Math.abs(event.getRawY() - handleTouchDownY);
+                    if (!handleDragging && distanceX > touchSlop && distanceX > distanceY) {
+                        handleSwiping = true;
+                        v.setPressed(false);
+                    }
+                    if (!handleMinimized && !expanded && !handleSwiping &&
+                            distanceY > touchSlop && distanceY > distanceX) {
                         handleDragging = true;
                         v.setPressed(false);
                     }
@@ -207,25 +244,30 @@ public final class QuickControlsOverlay {
                     }
                     return false;
                 case MotionEvent.ACTION_UP:
+                    handleTouching = false;
+                    scheduleHandleMinimize();
                     if (handleDragging) {
-                        scheduleHandleMinimize();
                         return true;
                     }
                     float inwardDistance = onLeft ?
                             event.getRawX() - handleTouchDownX :
                             handleTouchDownX - event.getRawX();
-                    if (handleMinimized && inwardDistance >= dp(24)) {
+                    if (!expanded && inwardDistance >= dp(24) &&
+                            inwardDistance > Math.abs(event.getRawY() - handleTouchDownY)) {
                         v.setPressed(false);
-                        v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                        revealHandle();
+                        v.performClick();
+                        return true;
+                    }
+                    if (handleSwiping || Math.abs(event.getRawX() - handleTouchDownX) > touchSlop ||
+                            Math.abs(event.getRawY() - handleTouchDownY) > touchSlop) {
+                        v.setPressed(false);
                         return true;
                     }
                     return false;
                 case MotionEvent.ACTION_CANCEL:
-                    if (!expanded) {
-                        scheduleHandleMinimize();
-                    }
-                    return handleDragging;
+                    handleTouching = false;
+                    scheduleHandleMinimize();
+                    return false;
                 default:
                     return false;
             }
@@ -369,6 +411,7 @@ public final class QuickControlsOverlay {
 
     public void hideForPip() {
         expandedBeforePip = expanded;
+        handleTouching = false;
         handle.removeCallbacks(minimizeHandleRunnable);
         layer.setVisibility(View.GONE);
     }
@@ -384,20 +427,34 @@ public final class QuickControlsOverlay {
     }
 
     public void hide() {
+        handleTouching = false;
         handle.removeCallbacks(minimizeHandleRunnable);
         layer.setVisibility(View.GONE);
     }
 
     private void scheduleHandleMinimize() {
         handle.removeCallbacks(minimizeHandleRunnable);
-        handle.postDelayed(minimizeHandleRunnable, HANDLE_IDLE_TIMEOUT_MS);
+        if (!expanded && !handleTouching && !handle.hasFocus() &&
+                !handle.isAccessibilityFocused() && layer.getVisibility() == View.VISIBLE) {
+            handle.postDelayed(minimizeHandleRunnable, HANDLE_IDLE_TIMEOUT_MS);
+        }
     }
 
     private void minimizeHandle() {
-        if (expanded || layer.getVisibility() != View.VISIBLE) {
+        if (expanded || handleTouching || handle.hasFocus() || handle.isAccessibilityFocused() ||
+                layer.getVisibility() != View.VISIBLE) {
             return;
         }
         handle.animate().cancel();
+        if (handleMinimized) {
+            handleHidden = true;
+            handle.animate()
+                    .alpha(0f)
+                    .setDuration(HANDLE_MOTION_DURATION_MS)
+                    .setInterpolator(MOTION_EASING)
+                    .start();
+            return;
+        }
         handleMinimized = true;
         callbacks.setOverlayInputActive(false);
         handle.setContentDescription(activity.getString(R.string.quick_controls_reveal));
@@ -413,6 +470,7 @@ public final class QuickControlsOverlay {
                 .setDuration(HANDLE_MOTION_DURATION_MS)
                 .setInterpolator(MOTION_EASING)
                 .start();
+        scheduleHandleMinimize();
     }
 
     private void revealHandle() {
@@ -424,6 +482,7 @@ public final class QuickControlsOverlay {
     private void showFullHandle() {
         handle.animate().cancel();
         handleMinimized = false;
+        handleHidden = false;
         handle.setContentDescription(activity.getString(R.string.quick_controls_open));
         handle.setVisibility(View.VISIBLE);
         handle.setImageResource(R.drawable.ic_quick_controls);

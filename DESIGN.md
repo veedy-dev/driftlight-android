@@ -7,7 +7,7 @@
 - **Density:** 4/10 — Daily App Balanced. Enough room for controller focus and touch, without empty showcase-space inside operational screens.
 - **Variance:** 7/10 — Offset Asymmetric. Titles, controls, and product imagery occupy distinct zones rather than centering everything.
 - **Motion:** 5/10 — Fluid Native. Motion confirms state and then gets out of the stream.
-- **Identity:** The hand-authored **Driftwave** mark fuses a simplified controller body with three streaming arcs, revealing a `D` through negative space. Warm White geometry sits on a restrained turquoise-to-blue launcher gradient; no generated artwork or effects.
+- **Identity:** The hand-authored **Drift** mark uses a forward-leaning `D`, three graduated streaming nodes, a rounded gamepad plus, and translucent ribbons. White geometry sits on the approved blue–cyan–mint launcher gradient (`#58ADFC`, `#5ACBF0`, `#8AF9DA`). Canonical artwork: `store-assets/driftlight-icon.svg`; selected concept: `store-assets/icon-concepts/driftlight-03-drift.svg`.
 - **Material:** Near-black mineral surfaces, low tonal elevation, thin structural rules, and one pale-mint focus signal.
 
 The stream is always the primary surface. Client chrome stays compact until requested. README and project imagery use direct real-device captures and ordinary Markdown — never synthetic marketing boards, fake device frames, or generated concept art.
@@ -52,7 +52,7 @@ One palette everywhere. Pale mint is the only accent.
 - **Secondary actions:** Raised Graphite fill, Mineral Line border, Warm White label. Focus adds a `2dp` Signal Mint outline and Signal Ink fill.
 - **Library cards:** `14dp` corners, Graphite fill, one Mineral Line stroke. Use cards only for hosts, artwork, or an actual elevation boundary.
 - **Quick-control rail:** A `332dp` drawer attaches flush to the user-selected left or right edge. Five `64dp` rows remain ordered: Show Full Keyboard, Show Android Keyboard, Task Switcher, Process Manager, More. A compact session-actions button stays in the header.
-- **Idle overlay:** The normal handle collapses after three seconds into a visually `4dp` Signal Mint stripe with a transparent `48dp` touch target. Tapping or swiping inward reveals the handle; the revealed handle can be dragged vertically before opening the drawer.
+- **Idle overlay:** The normal handle collapses after three idle seconds into a visually `4dp` Signal Mint stripe, then fades completely after another three seconds. A transparent `48×72dp` touch target remains at its last position on the selected edge. Tap or swipe inward to reveal the stripe, repeat to reveal the full handle, then tap or swipe inward again to open the drawer. The full handle remains vertically draggable. Active touch, keyboard/accessibility focus, and the open drawer suspend idle hiding.
 - **Desktop keyboard:** Compact `180–240dp` edge-to-edge sheet with explicit `2dp` key gutters and at least `94%` opacity so host content does not visually collide with labels. Sticky modifiers use Signal Ink plus a Signal Mint outline.
 - **Inputs:** Label above or within the standard Material outline, `12dp` corners, helper/error text below. Never use floating decoration that competes with the value.
 - **Loading:** Prefer layout-shaped skeletons. For indeterminate host discovery, use one branded mint arc and specific recovery copy — never a stack of generic spinners.
@@ -84,11 +84,11 @@ One palette everywhere. Pale mint is the only accent.
 **NEVER DO:**
 
 - No AI-generated mascot scenes, glossy concept wallpaper, or fake product screenshots.
-- No animals or creature mascots for Driftlight. Use the authored Driftwave mark.
+- No animals or creature mascots for Driftlight. Use the authored Drift mark.
 - No emojis.
 - No Inter.
 - No pure black (`#000000`).
-- No purple neon, outer glows, or oversaturated gradients. The launcher tile alone may use the restrained `#35D8C0` to `#1769FF` Driftwave gradient.
+- No purple neon, outer glows, or oversaturated gradients. The launcher tile alone may use the approved blue–cyan–mint Drift gradient.
 - No glassmorphism as decoration.
 - No gradient text.
 - No overlapping text and imagery.
@@ -97,5 +97,5 @@ One palette everywhere. Pale mint is the only accent.
 - No generic placeholder names or fake round metrics.
 - No custom cursor.
 - No copy such as “Elevate”, “Seamless”, “Unleash”, “Next-Gen”, “Scroll to explore”, or “Swipe down”.
-- No text-heavy app icon; the Driftwave silhouette must work at `48px`.
+- No text-heavy app icon; the Drift silhouette must work at `48px`. Keep adaptive foreground artwork within Android’s `66dp` safe circle on the `108dp` canvas.
 - No navigation or control surface that covers Android system bars without either insetting or intentionally entering immersive fullscreen.
