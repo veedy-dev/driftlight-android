@@ -38,6 +38,13 @@ Driftlight is a Moonlight Android fork with a new interface, quick controls, and
 - Moonshine and Apollo support
 - Control-channel and FEC crash fixes
 
+## Frontend artwork
+
+Use the [1254px frontend cover](store-assets/driftlight-frontend.png) ([editable SVG](store-assets/driftlight-frontend.svg)) for a sharp circular icon with a smaller mark and extra padding. This is separate from the Android launcher icon.
+
+- **RetroHrai:** Long-press Driftlight, open **Cover → Add media → Select from gallery**, and select the frontend PNG. Import it through the UI; copying a file into the covers directory alone does not activate it.
+- **ES-DE on Android:** Create `androidapps/Driftlight.app` in your configured ROM directory containing `com.veedy.driftlight`. Copy the PNG to `downloaded_media/androidapps/covers/Driftlight.png` in your configured ES-DE data directory (or the equivalent custom media directory), then restart ES-DE. Driftlight appears under **Android Apps**.
+
 ## Screenshots
 
 | Host selection | Quick controls |
